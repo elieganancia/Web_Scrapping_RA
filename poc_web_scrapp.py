@@ -19,6 +19,7 @@ def get_countries() :
 """Web-Scrapping Events from Resident Advisor"""
 def get_events(countries) :
     events = pd.DataFrame()
+    event = pd.DataFrame()
     for i in range(len(countries)) :
         url_events = 'https://www.residentadvisor.net' + countries[i][0]
         with requests.Session() as res :
@@ -60,6 +61,7 @@ def get_events(countries) :
             country_link = [countries[i][1]]*len(event_artists)
             event_list = list(zip(country_link, event_id, event_link,event_name, event_date, event_location_id, event_follower, event_lineup,event_artists))
             event = pd.DataFrame(event_list, columns = ['Country_ID','Event_ID', 'Event_Link','Event_Name', 'Event_Date', 'Event_Location', 'Event_Follower', 'Event_Lineup','Event_Artists'])
+            print('Scrapping Event Page from '+ countries[i][0] + ' : '+ link)
         events = events.append(event, ignore_index=True)
     return events
 
@@ -98,17 +100,8 @@ def get_clubs() :
             club_email.append(page_soup.findAll(class_="pr24 pt8")[1].find_all('a', href=True, text=True)[0].get('href'))
         except :
             club_email.append('None')
-
+        print('Scrapping Club Page : ' + url_club)
     club_list = list(zip(club_ra_link, club_id, club_name, club_loc, club_followers, club_email))
     clubs = pd.DataFrame(club_list, columns = ['Club_link', 'Club_ID', 'Club_Name', 'Club_Location', 'Club_Follower', 'Club_Email'])
     return clubs
-
-
-def main():
-    df_events = get_events(get_countries())
-    df_clubs = get_clubs()
-
-
-if __name__ == '__main__':
-    main()
 
