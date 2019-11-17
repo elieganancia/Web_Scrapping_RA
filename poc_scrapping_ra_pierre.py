@@ -15,6 +15,7 @@ pd.set_option('display.max_columns', 500)
 ###  Utilities  ###
 ###################
 
+
 def get_content(url_):
     with requests.Session() as res:
         page_ = res.get(url_)
@@ -36,12 +37,11 @@ base_url = "https://www.residentadvisor.net"
 
 
 ##### Get list of labels
-url_labels = "https://www.residentadvisor.net/labels.aspx?show=all"
-
 
 def get_labels(url_labels_):
     BASE_URL = "https://www.residentadvisor.net"
     label_list_content = get_content(url_labels_)
+    print("Getting all labels of Resident Advisor")
     list_letters = label_list_content.findAll(class_='fl pr8')
 
     label_names = []
@@ -62,19 +62,20 @@ def get_labels(url_labels_):
 
 
     data_labels_return = pd.DataFrame({'name':label_names, 'url':label_urls, 'id':label_ids})
+    print("{0} labels have been found on Resident Advisor".format(data_labels_return.shape[0]))
     data_labels_return['url'] = BASE_URL + data_labels_return['url']
 
     return data_labels_return
 
 
-data_labels = get_labels(url_labels)
-
 ######---> specific labels
+
 
 
 def get_label_information(data_labels_):
     list_url_label = list(data_labels_['url'])
     list_name_label = list(data_labels_['name'])
+    print("The script is getting information for all labels ({0} labels)".format(len(list_url_label)))
 
     date_creation_labels = []
     city_labels = []
@@ -122,7 +123,7 @@ def get_label_information(data_labels_):
     return data_label_information_return
 
 
-data_labels_information = get_label_information(data_labels)
+#data_labels_information = get_label_information(data_labels)
 
 ########################
 ### Artist Database ####
@@ -134,7 +135,7 @@ url_artists = "https://www.residentadvisor.net/dj.aspx"
 def get_artists(url_artists_):
     artist_list_content = get_content(url_artists_)
     list_letters = artist_list_content.findAll(class_='fl pr8')
-
+    print("Getting all artists of Resident Advisor")
     artist_names = []
     artist_urls = []
     artist_ids = []
@@ -153,11 +154,10 @@ def get_artists(url_artists_):
 
 
     data_artist_return = pd.DataFrame({'name':artist_names, 'url':artist_urls, 'id':artist_ids})
+    print("{0} labels have been found on Resident Advisor".format(data_artist_return.shape[0]))
 
     return data_artist_return
 
-
-data_artists = get_artists(url_artists)
 
 
 #---> specific artist
@@ -165,6 +165,7 @@ data_artists = get_artists(url_artists)
 def get_artist_information(data_artist_):
 
     list_url_artist = list(data_artist_['url'])
+    print("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
 
     artist_names = []
     artist_basis_locations = []
@@ -239,9 +240,4 @@ def get_artist_information(data_artist_):
     return data_artist_informations_return
 
 
-data_artists_information = get_artist_information(data_artists)
 
-########################################################################################################################
-# monday
-#commit main
-# one submit hive + github
