@@ -36,7 +36,7 @@ def main():
 
 
     data_countries = se.get_countries()
-    #data_countries = data_countries.iloc[200, :]
+    #data_countries = data_countries.iloc[:200, :]
 
     data_events = se.get_events(data_countries)
     data_clubs = se.get_clubs()
