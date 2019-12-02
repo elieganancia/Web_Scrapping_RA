@@ -18,12 +18,28 @@ def get_countries():
     countries = list(zip(country_ID, country_name))
     return countries
 
+def get_countries_id() :
+    city_name = []
+    city_id = []
+    url_club = 'https://www.residentadvisor.net/clubs.aspx?ai=44'
+    with requests.Session() as res:
+        country_page = res.get(url_club)
+        soup_country = BeautifulSoup(country_page.content, 'html.parser')
+    country_id = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
+    country_name = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
+    countries = list(zip(country_name,country_id))
+    for country in countries :
+        url_club = 'https://www.residentadvisor.net'+country[1]
+        with requests.Session() as res:
+            country_page = res.get(url_club)
+            soup_country = BeautifulSoup(country_page.content, 'html.parser')
+        city_name.append([soup_country.findAll(class_='links')[1].findAll('a')[i].get_text()for i in range(len(soup_country.findAll(class_='links')[1].findAll('a')))])
+        city_id += [soup_country.findAll(class_='links')[1].findAll('a')[i].get('href')for i in range(len(soup_country.findAll(class_='links')[1].findAll('a')))]
+    return city_id
 
 def get_events(countries):
     """Web-Scrapping Events from Resident Advisor, enter a list of country ID (From Resident Advisor) and returns a
     Dataframe """
-    events = pd.DataFrame()
-    event = pd.DataFrame()
     for i in range(len(countries)):
         url_events = 'https://www.residentadvisor.net' + countries[i][0]
         with requests.Session() as res:
@@ -80,55 +96,57 @@ def get_events(countries):
     return events
 
 
-def get_clubs():
-    """Web-Scrapping Clubs from Resident Advisor (only in Tel Aviv for the moment) and return a Dataframe"""
-    url_club = 'https://www.residentadvisor.net/club.aspx'
-    with requests.Session() as res:
-        club_page = res.get(url_club)
-    soup = BeautifulSoup(club_page.content, 'html.parser')
-
-    club_name_htm = soup.findAll(class_='fl col4-6')[0].findAll('a')
-    club_name = [club_name_htm[i].get_text().title() for i in range(len(club_name_htm))]
-    club_loc_htm = soup.findAll(class_="fl grey mobile-off")
-    club_loc = [club_loc_htm[i].get_text() for i in range(len(club_loc_htm))]
-    club_id_htm = soup.findAll(class_='fl col4-6')[0].findAll('a', href=True, text=True)
-    club_id = [club_name_htm[i].get('href') for i in range(len(club_id_htm))]
-    club_id = [parse.parse_qsl(parse.urlsplit(club_id[i]).query)[0][1] for i in range(len(club_id_htm))]
-    club_ra_link = ['https://www.residentadvisor.net/club.aspx?id=' + id for id in club_id]
-    club_followers = []
-    club_contact = []
-    club_phone = []
-    club_capacity = []
-    for i in range(len(club_ra_link)):
+def get_clubs(countries_id):
+    """Web-Scrapping Clubs from Resident Advisor and return a Dataframe"""
+    clubs = pd.DataFrame()
+    for country_id in countries_id[:10] :
+        url_club = 'https://www.residentadvisor.net' + country_id
         with requests.Session() as res:
-            club_page = res.get(club_ra_link[i])
-        page_soup = BeautifulSoup(club_page.content, 'html.parser')
-        phone_ = False
-        capacity_ = False
-        for el in page_soup.findAll(class_="fl col4-6 small")[0].findAll(class_="clearfix")[1].findAll('li'):
-            if "phone" in el.get_text().lower():
-                club_phone.append(el.get_text().split('/')[-1])
-                phone_ = True
-            if "capacity" in el.get_text().lower():
-                club_capacity.append(el.get_text().split('/')[-1])
-                capacity_ = True
-        if not phone_:
-            club_phone.append("None")
-        if not capacity_:
-            club_capacity.append("None")
-        try:
-            club_followers.append(page_soup.findAll(class_="favCount")[0].get_text().strip())
-        except:
-            club_followers.append('None')
-        try:
-            club_contact.append(
-                [page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)[i].get('href') for i
-                 in range(len(page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)))][0])
-        except:
-            club_contact.append('None')
-        print('Scrapping Club Page : ' + club_name[i].title())
-    clubs = pd.DataFrame(
-        {'Club_link': club_ra_link, 'Club_ID': club_id, 'Club_Name': club_name, 'Club_Location': club_loc,
-         'Club_Follower': club_followers, 'Club_Phone': club_phone,
-         'Club_Capacity': club_capacity, 'Club_Contact': club_contact})
+            club_page = res.get(url_club)
+        soup = BeautifulSoup(club_page.content, 'html.parser')
+        club_name_htm = soup.findAll(class_='fl col4-6')[0].findAll('a')
+        club_name = [club_name_htm[i].get_text().title() for i in range(len(club_name_htm))]
+        club_loc_htm = soup.findAll(class_="fl grey mobile-off")
+        club_loc = [club_loc_htm[i].get_text() for i in range(len(club_loc_htm))]
+        club_id_htm = soup.findAll(class_='fl col4-6')[0].findAll('a', href=True, text=True)
+        club_id = [club_name_htm[i].get('href') for i in range(len(club_id_htm))]
+        club_id = [parse.parse_qsl(parse.urlsplit(club_id[i]).query)[0][1] for i in range(len(club_id_htm))]
+        club_ra_link = ['https://www.residentadvisor.net/club.aspx?id=' + id for id in club_id]
+        club_followers = []
+        club_contact = []
+        club_phone = []
+        club_capacity = []
+        for i in range(len(club_ra_link)):
+            with requests.Session() as res:
+                club_page = res.get(club_ra_link[i])
+            page_soup = BeautifulSoup(club_page.content, 'html.parser')
+            phone_ = False
+            capacity_ = False
+            for el in page_soup.findAll(class_="fl col4-6 small")[0].findAll(class_="clearfix")[1].findAll('li'):
+                if "phone" in el.get_text().lower():
+                    club_phone.append(el.get_text().split('/')[-1])
+                    phone_ = True
+                if "capacity" in el.get_text().lower():
+                    club_capacity.append(el.get_text().split('/')[-1])
+                    capacity_ = True
+            if not phone_:
+                club_phone.append("None")
+            if not capacity_:
+                club_capacity.append("None")
+            try:
+                club_followers.append(page_soup.findAll(class_="favCount")[0].get_text().strip())
+            except:
+                club_followers.append('None')
+            try:
+                club_contact.append(
+                    [page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)[i].get('href') for i
+                     in range(len(page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)))][0])
+            except:
+                club_contact.append('None')
+            print('Scrapping Club Page : ' + club_name[i].title())
+        club = pd.DataFrame(
+            {'Club_link': club_ra_link, 'Club_ID': club_id, 'Club_Name': club_name, 'Club_Location': club_loc,
+             'Club_Follower': club_followers, 'Club_Phone': club_phone,
+             'Club_Capacity': club_capacity, 'Club_Contact': club_contact})
+        clubs = clubs.append(club,ignore_index=True)
     return clubs
