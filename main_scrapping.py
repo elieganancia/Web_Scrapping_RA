@@ -22,7 +22,7 @@ def main():
     url_labels = "https://www.residentadvisor.net/labels.aspx?show=all"
     data_labels = sp.get_labels(url_labels)
 
-    data_labels = data_labels.iloc[:200, :]
+    #data_labels = data_labels.iloc[:200, :]
 
     data_labels_information = sp.get_label_information(data_labels)
 
@@ -30,13 +30,13 @@ def main():
     url_artists = "https://www.residentadvisor.net/dj.aspx"
     data_artists = sp.get_artists(url_artists)
 
-    data_artists = data_artists.iloc[:200, :]
+    #data_artists = data_artists.iloc[:200, :]
 
     data_artists_information = sp.get_artist_information(data_artists)
 
 
     data_countries = se.get_countries()
-    data_countries = data_countries.iloc[:200, :]
+    #data_countries = data_countries.iloc[:200, :]
 
     data_events = se.get_events(data_countries)
     data_clubs = se.get_clubs()

@@ -111,6 +111,7 @@ def get_label_information(data_labels_):
     online_urls = []
     label_popularities = []
     label_description = []
+    label_artists = []
 
     for url_ in list_url_label:
         print("Getting information on : {0}".format(url_))
@@ -155,10 +156,21 @@ def get_label_information(data_labels_):
         third_content = label_information_content.findAll(class_="record-label-blurb")
         label_description.append(third_content[0].get_text())
 
+        ### fourth type of information (description)
+        try:
+            fourth_content = label_information_content.findAll(class_='grid standard')[0].findAll("a")
+            list_artists_label = []
+            for el in fourth_content:
+                list_artists_label.append(el.get("href").split("/")[-1])
+
+        except:
+            list_artists_label = None
+        label_artists.append(list_artists_label)
+
     data_label_information_return = pd.DataFrame({'Name': list_name_label, 'Creation': date_creation_labels,
                                                   'Country': location_labels, 'Online_account': online_urls,
                                                   'Followers': label_popularities, 'Description': label_description,
-                                                  'id': list_ids_label})
+                                                  'id': list_ids_label,"ids_artists": label_artists})
     print("\n")
 
     return data_label_information_return
