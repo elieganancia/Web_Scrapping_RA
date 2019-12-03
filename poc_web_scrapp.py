@@ -19,8 +19,12 @@ def get_countries():
     return countries
 
 def get_events(countries):
-    """Web-Scrapping Events from Resident Advisor, enter a list of country ID (From Resident Advisor) and returns a
-    Dataframe """
+    """
+    This function get information on every event by country (or city) page
+    :param countries: list containing id of countries (use function get_countries to scrap countries)
+    :return: a dataframe containing specifics information for each events (name, country, date, location,
+     followers, Line-up (list of dj by their RA id), Artist for the events (by name) )
+    """
     for i in range(len(countries)):
         url_events = 'https://www.residentadvisor.net' + countries[i][0]
         with requests.Session() as res:
@@ -78,6 +82,7 @@ def get_events(countries):
 
 
 def get_countries_id() :
+    """Web-Scrapping Countries from Resident Advisor to use for getting all clubs"""
     city_name = []
     city_id = []
     url_club = 'https://www.residentadvisor.net/clubs.aspx?ai=44'
@@ -98,7 +103,12 @@ def get_countries_id() :
 
 
 def get_clubs(countries_id):
-    """Web-Scrapping Clubs from Resident Advisor and return a Dataframe"""
+    """
+    This function get information on every clubs by country (or city) page
+    :param countries_id: list containing RA id of countries (use function get_countries_id to scrap countries id)
+    :return: a dataframe containing specifics information for each club (name, country, id, location,
+     followers, capacity, phone , contact )
+    """
     clubs = pd.DataFrame()
     for country_id in countries_id :
         time.sleep(0.1)
