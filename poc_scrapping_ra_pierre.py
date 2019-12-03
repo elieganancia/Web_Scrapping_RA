@@ -99,6 +99,7 @@ def get_label_information(data_labels_):
     """
     list_url_label = list(data_labels_['url'])
     list_name_label = list(data_labels_['name'])
+    list_ids_label = list(data_labels_['id'])
 
     print("//////////////////////////////////////////////////////////////////////////////////////////")
     print("       The script is getting information for all labels ({0} labels)".format(len(list_url_label)))
@@ -156,7 +157,8 @@ def get_label_information(data_labels_):
 
     data_label_information_return = pd.DataFrame({'Name': list_name_label, 'Creation': date_creation_labels,
                                                   'Country': location_labels, 'Online_account': online_urls,
-                                                  'Followers': label_popularities, 'Description': label_description})
+                                                  'Followers': label_popularities, 'Description': label_description,
+                                                  'id': list_ids_label})
     print("\n")
 
     return data_label_information_return
@@ -187,9 +189,9 @@ def get_artists(url_artists_):
     artist_names = []
     artist_urls = []
     artist_ids = []
-    #we loop first over all letters
+    # we loop first over all letters
     for i in range(len(list_letters)):
-        # we get liste of label for each letters
+        # we get a list of label for each letters
         list_artist_letter = list_letters[i].findAll('a')
         for j in range(len(list_artist_letter)):
             artist_ = list_artist_letter[j].get_text()
@@ -208,7 +210,7 @@ def get_artists(url_artists_):
     return data_artist_return
 
 
-#---> specific artist
+# specific artist
 
 def get_artist_information(data_artist_):
     """
