@@ -17,7 +17,7 @@ import pandas as pd
 import argparse
 import os
 
-DB_FILENAME = "resident_advisor.db"
+DB_FILENAME = "Resident_Advisor_db"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -56,7 +56,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these labels")
         data_labels_information = sp.get_label_information(data_labels)
-        ra_sql.insert_label(data_labels, DB_FILENAME)
+        ra_sql.insert_label(data_labels_information, DB_FILENAME)
     else:
         data_labels = None
         data_labels_information = None
@@ -74,7 +74,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these artist")
         data_artists_information = sp.get_artist_information(data_artists)
-        ra_sql.insert_artist(data_artists, DB_FILENAME)
+        ra_sql.insert_artist(data_artists_information, DB_FILENAME)
     else:
         data_artists = None
         data_artists_information = None
@@ -82,12 +82,14 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
     if events_:
         data_countries = se.get_countries()
 
-        data_events = se.get_events(data_countries)
+        data_events = se.get_events(data_countries,DB_FILENAME)
     else:
         data_events = None
 
     if clubs_:
-        data_clubs = se.get_clubs()
+        data_countries_id = se.get_countries_id()
+
+        data_clubs = se.get_clubs(data_countries_id,DB_FILENAME)
     else:
         data_clubs = None
 
