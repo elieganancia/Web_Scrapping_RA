@@ -55,6 +55,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
         print("Thanks to Scrappy Coco, we have a listing of labels. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these labels")
+        print("\n")
         data_labels_information = sp.get_label_information(data_labels)
         ra_sql.insert_label(data_labels_information, DB_FILENAME)
     else:
@@ -73,6 +74,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
         print("Thanks to Scrappy Coco, we have a listing of artists. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these artist")
+        print("\n")
         data_artists_information = sp.get_artist_information(data_artists)
         ra_sql.insert_artist(data_artists_information, DB_FILENAME)
     else:
@@ -85,6 +87,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
               "for each events (parties) on Resident Advisor")
         print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!!")
+        print("\n")
         data_events = se.get_events(data_countries,DB_FILENAME)
     else:
         data_events = None
@@ -95,6 +98,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
               "for each events (clubs) on Resident Advisor")
         print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!!")
+        print("\n")
         data_clubs = se.get_clubs(data_countries_id,DB_FILENAME)
     else:
         data_clubs = None

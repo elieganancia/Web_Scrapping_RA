@@ -217,7 +217,7 @@ def get_artists(url_artists_):
 
     data_artist_return = pd.DataFrame({'name':artist_names, 'url':artist_urls, 'id':artist_ids})
     data_artist_return['url'] = BASE_URL + data_artist_return['url']
-    print("{0} labels have been found on Resident Advisor".format(data_artist_return.shape[0]))
+    print("{0} artists have been found on Resident Advisor".format(data_artist_return.shape[0]))
 
     return data_artist_return
 
