@@ -85,7 +85,8 @@ def get_events(countries,db_filename):
         if len(events) > 10000 :
             sqra.insert_events(events, db_filename)
             events = pd.DataFrame()
-
+    if len(events) > 0 :
+        sqra.insert_events(events, db_filename)
     return events
 
 
@@ -174,4 +175,6 @@ def get_clubs(countries_id,db_filename):
         if len(clubs) > 10000 :
             sqra.insert_clubs(clubs, db_filename)
             clubs = pd.DataFrame()
+    if len(clubs) > 0 :
+        sqra.insert_clubs(clubs, db_filename)
     return clubs
