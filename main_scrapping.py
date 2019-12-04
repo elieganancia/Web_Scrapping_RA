@@ -81,14 +81,20 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
 
     if events_:
         data_countries = se.get_countries()
-
+        print("As required, Scrappy Coco will now get some details "
+              "for each events (parties) on Resident Advisor")
+        print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
+              "Scrappy Coco (Americano) :) !!!!!!")
         data_events = se.get_events(data_countries,DB_FILENAME)
     else:
         data_events = None
 
     if clubs_:
         data_countries_id = se.get_countries_id()
-
+        print("As required, Scrappy Coco will now get some details "
+              "for each events (clubs) on Resident Advisor")
+        print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
+              "Scrappy Coco (Americano) :) !!!!!!")
         data_clubs = se.get_clubs(data_countries_id,DB_FILENAME)
     else:
         data_clubs = None
@@ -134,7 +140,7 @@ def main():
             print("You required the scrapping of artists")
             print("\n")
             artist_arg = True
-        launch_scrapping(label_arg, artist_arg, club_arg, event_arg)
+        launch_scrapping(label_arg, artist_arg, event_arg, club_arg)
 
 
 if __name__ == '__main__':
