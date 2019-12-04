@@ -28,6 +28,8 @@ def get_events(countries,db_filename):
     :return: a dataframe containing specifics information for each events (name, country, date, location,
      followers, Line-up (list of dj by their RA id), Artist for the events (by name) )
     """
+    events = pd.DataFrame()
+    event = pd.DataFrame()
     for i in range(len(countries)):
         url_events = 'https://www.residentadvisor.net' + countries[i][0]
         with requests.Session() as res:
@@ -43,7 +45,7 @@ def get_events(countries,db_filename):
         event_follower = []
         event_lineup = []
         event_artists = []
-        for link in event_link:
+        for j,link in enumerate(event_link):
             with requests.Session() as res:
                 club_page = res.get(link)
             time.sleep(0.1)
@@ -79,14 +81,16 @@ def get_events(countries,db_filename):
             event = pd.DataFrame(event_list,
                                  columns=['Country_ID', 'Event_ID', 'Event_Link', 'Event_Name', 'Event_Date',
                                           'Event_Location', 'Event_Follower', 'Event_Lineup', 'Event_Artists'])
-            print('Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
+            print(str(j) + ' Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
         events = events.append(event, ignore_index=True)
 
-        if len(events) > 10000 :
+        if len(events) > 1000 :
             sqra.insert_events(events, db_filename)
             events = pd.DataFrame()
+            print("Commiting Database...........")
     if len(events) > 0 :
         sqra.insert_events(events, db_filename)
+        print("Commiting Database...........")
     return events
 
 
@@ -172,9 +176,10 @@ def get_clubs(countries_id,db_filename):
              'Club_Follower': club_followers, 'Club_Phone': club_phone,
              'Club_Capacity': club_capacity, 'Club_Contact': club_contact})
         clubs = clubs.append(club,ignore_index=True)
-        if len(clubs) > 10000 :
+        if len(clubs) > 1000 :
             sqra.insert_clubs(clubs, db_filename)
             clubs = pd.DataFrame()
+            print("Commiting Database...........")
     if len(clubs) > 0 :
         sqra.insert_clubs(clubs, db_filename)
     return clubs
