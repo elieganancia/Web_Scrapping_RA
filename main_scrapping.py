@@ -15,9 +15,8 @@ import poc_web_scrapp as se
 import SQL_Web_Scrapping_RA as ra_sql
 import pandas as pd
 import argparse
-import os
 
-DB_FILENAME = "Resident_Advisor_db"
+DB_FILENAME = "Data_Resident_Advisor"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -95,7 +94,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
     if clubs_:
         data_countries_id = se.get_countries_id()
         print("As required, Scrappy Coco will now get some details "
-              "for each events (clubs) on Resident Advisor")
+              "for each clubs on Resident Advisor")
         print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!!")
         print("\n")
