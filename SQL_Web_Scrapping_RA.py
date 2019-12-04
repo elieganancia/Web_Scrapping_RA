@@ -1,91 +1,100 @@
 import sqlite3
 import os
-import pandas as pd
+import mysql.connector
 
 
 def create_table_ra(db_filename):
+    """Create a standard DataBase for any Resident_Advisor scrapping data
+    :param db_filename : Name of the Database.
+    :return: Create the Database in your current path
+    """
 
-    if os.path.exists(db_filename):
-        os.remove(db_filename)
-    with sqlite3.connect(db_filename) as con:
-        cur = con.cursor()
-        cur.execute('''CREATE TABLE artists (
-                        artist_id_ra int PRIMARY KEY,
-                        artist_url varchar,
-                        artist_name varchar,
-                        ) ''')
+    mydb = mysql.connector.connect(host="localhost",user="resident_advisor",passwd="bicep",auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
 
-        cur.execute('''CREATE TABLE artists_information (
-                          id varchar PRIMARY KEY,
-                          id_artist_ra varchar,
-                          artist_name varchar ,
-                          artist_origin varchar,
-                          artist_social_media varchar,
-                          artist_nickname varchar,
-                          artist_follower int,
-                          artist_description varchar,
-                          id_artist_collab varchar,
-                          artist_famous_location varchar,
-                          id_artist_most_played_club int,
-                            )''')
+    cur.execute(""" CREATE DATABASE """ + db_filename)
 
-        cur.execute('''CREATE TABLE labels (
-                                  id varchar PRIMARY KEY,
-                                  id_label_ra varchar,
-                                  url_label varchar,
-                                    )''')
+    mydb = mysql.connector.connect(host="localhost",user="resident_advisor", db = db_filename,passwd="bicep",auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
 
-        cur.execute('''CREATE TABLE labels_information (
-                                  id varchar PRIMARY KEY,
-                                  id_label_ra varchar,
-                                  label_name varchar,
-                                  label_creation varchar,
-                                  label_country varchar,
-                                  label_social_media varchar,
-                                  label_follower int,
-                                  label_description varchar,
-                                  label_artist varchar,
-                                    )''')
-        cur.execute('''CREATE TABLE countries (
-                                  id varchar PRIMARY KEY,
-                                  id_country_ra varchar,
-                                  country_name varchar,
-                                    )''')
+    cur.execute("USE " + db_filename)
 
-        cur.execute('''CREATE TABLE clubs_information (
-                                  id varchar PRIMARY KEY,
-                                  id_country_ra varchar,
-                                  club_id_ra int ,
-                                  club_name varchar,
-                                  club_location varchar,
-                                  club_follower int,
-                                  club_phone varchar,
-                                  club_capacity int,
-                                  club_contact varchar
-                                            )''')
+    cur.execute("""CREATE TABLE artists (artist_id_ra INT PRIMARY KEY,artist_url VARCHAR(500),artist_name VARCHAR(400))""")
 
-        cur.execute('''CREATE TABLE events_information (
-                                  id varchar PRIMARY KEY,
-                                  event_id_ra int,
-                                  country_id_ra varchar,
-                                  event_name varchar,
-                                  event_date varchar,
-                                  club_id_ra int,
-                                  event_follower int,
-                                  event_lineup varchar,
-                                  event_artist varchar,
-                                            )''')
+    cur.execute('''CREATE TABLE artists_information (
+                                 id varchar(500) PRIMARY KEY,
+                                 id_artist_ra varchar(500),
+                                 artist_name varchar(500),
+                                 artist_origin varchar(500),
+                                 artist_social_media varchar(500),
+                                 artist_nickname varchar(500),
+                                 artist_follower int,
+                                 artist_description varchar(500),
+                                 id_artist_collab varchar(500),
+                                 artist_famous_location varchar(500),
+                                 id_artist_most_played_club int
+                                   )''')
 
-        con.commit()
-        cur.close()
+    cur.execute('''CREATE TABLE labels (
+                                         id varchar(500) PRIMARY KEY,
+                                         id_label_ra varchar(500),
+                                         url_label varchar(500)
+                                           )''')
 
+    cur.execute('''CREATE TABLE labels_information (
+                                         id varchar(500) PRIMARY KEY,
+                                         id_label_ra varchar(500),
+                                         label_name varchar(500),
+                                         label_creation varchar(500),
+                                         label_country varchar(500),
+                                         label_social_media varchar(500),
+                                         label_follower int,
+                                         label_description varchar(500),
+                                         label_artist varchar(500)
+                                           )''')
+    cur.execute('''CREATE TABLE countries (
+                                         id varchar(500) PRIMARY KEY,
+                                         id_country_ra varchar(500),
+                                         country_name varchar(500)
+                                           )''')
 
-db_filename = 'Web_Scrapping_RA.db'
+    cur.execute('''CREATE TABLE clubs_information (
+                                         id varchar(500) PRIMARY KEY,
+                                         id_country_ra varchar(500),
+                                         club_id_ra int ,
+                                         club_name varchar(500),
+                                         club_location varchar(500),
+                                         club_follower int,
+                                         club_phone varchar(500),
+                                         club_capacity int,
+                                         club_contact varchar(500)
+                                                   )''')
+
+    cur.execute('''CREATE TABLE events_information (
+                                         id varchar(500) PRIMARY KEY,
+                                         event_id_ra int,
+                                         country_id_ra varchar(500),
+                                         event_name varchar(500),
+                                         event_date varchar(500),
+                                         club_id_ra int,
+                                         event_follower int,
+                                         event_lineup varchar(500),
+                                         event_artist varchar(500)
+                                                   )''')
+
+    cur.close()
 
 
-def insert_artist(df):
-    with sqlite3.connect(db_filename) as con:
-        cur = con.cursor()
+
+def insert_artist(df, db_filename):
+    """Insert artists into the database (Table Artist_Information)
+        :param df : Name of the Artist Dataframe.
+        :param db_filename : Name of the Database
+        :return: Insert in the db_filename the datframe info
+        """
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
     for i in range(len(df)) :
         cur.execute("INSERT INTO artists_information (id ,\
         id_artist_ra,\
@@ -109,15 +118,16 @@ def insert_artist(df):
                      df["Description"][i],
                      df["Collaborations"][i],
                      df["Famous_location"][i],
-                     df["Famous_clubs"][i],
+                     df["Famous_clubs"][i]
                      ])
-    con.commit()
+    mydb.commit()
     cur.close()
 
 
-def insert_label(df):
-    with sqlite3.connect(db_filename) as con:
-        cur = con.cursor()
+def insert_label(df,db_filename):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
     for i in range(len(df)) :
         cur.execute("INSERT INTO label_information (id ,\
                                   id_label_ra ,\
@@ -137,15 +147,16 @@ def insert_label(df):
                      df["Online_account"][i],
                      df["Followers"][i],
                      df["Description"][i],
-                     df["ids_artists"][i],
+                     df["ids_artists"][i]
                      ])
-    con.commit()
+    mydb.commit()
     cur.close()
 
 
-def insert_clubs(df):
-    with sqlite3.connect(db_filename) as con:
-        cur = con.cursor()
+def insert_clubs(df,db_filename):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
     for i in range(len(df)) :
         cur.execute("INSERT INTO artists_information (id ,\
                                   id_country_ra ,\
@@ -165,15 +176,16 @@ def insert_clubs(df):
                      df["Club_Follower"][i],
                      df["Club_Phone"][i],
                      df["Club_Capacity"][i],
-                     df["Club_Contact"][i],
+                     df["Club_Contact"][i]
                      ])
-    con.commit()
+    mydb.commit()
     cur.close()
 
 
-def insert_events(df):
-    with sqlite3.connect(db_filename) as con:
-        cur = con.cursor()
+def insert_events(df, db_filename):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
     for i in range(len(df)) :
         cur.execute("INSERT INTO artists_information (id ,\
                                   event_id_ra ,\
@@ -193,7 +205,8 @@ def insert_events(df):
                      df["Event_Location"][i],
                      df["Event_Follower"][i],
                      df["Event_Lineup"][i],
-                     df["Event_Artists"][i],
+                     df["Event_Artists"][i]
                      ])
-    con.commit()
+    mydb.commit()
     cur.close()
+
