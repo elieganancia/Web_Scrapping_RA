@@ -3,6 +3,8 @@ import requests
 import pandas as pd
 from urllib import parse
 import time
+import SQL_Web_Scrapping_RA as sqra
+
 
 
 def get_countries():
@@ -18,9 +20,10 @@ def get_countries():
     countries = list(zip(country_ID, country_name))
     return countries
 
-def get_events(countries):
+def get_events(countries,db_filename):
     """
     This function get information on every event by country (or city) page
+    :param countries: list containing id of countries (use function get_countries to scrap countries)
     :param countries: list containing id of countries (use function get_countries to scrap countries)
     :return: a dataframe containing specifics information for each events (name, country, date, location,
      followers, Line-up (list of dj by their RA id), Artist for the events (by name) )
@@ -78,6 +81,12 @@ def get_events(countries):
                                           'Event_Location', 'Event_Follower', 'Event_Lineup', 'Event_Artists'])
             print('Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
         events = events.append(event, ignore_index=True)
+
+        if len(events) > 10000 :
+            sqra.insert_events(events, db_filename)
+            events = pd.DataFrame()
+    if len(events) > 0 :
+        sqra.insert_events(events, db_filename)
     return events
 
 
@@ -102,7 +111,7 @@ def get_countries_id() :
     return city_id
 
 
-def get_clubs(countries_id):
+def get_clubs(countries_id,db_filename):
     """
     This function get information on every clubs by country (or city) page
     :param countries_id: list containing RA id of countries (use function get_countries_id to scrap countries id)
@@ -163,4 +172,9 @@ def get_clubs(countries_id):
              'Club_Follower': club_followers, 'Club_Phone': club_phone,
              'Club_Capacity': club_capacity, 'Club_Contact': club_contact})
         clubs = clubs.append(club,ignore_index=True)
+        if len(clubs) > 10000 :
+            sqra.insert_clubs(clubs, db_filename)
+            clubs = pd.DataFrame()
+    if len(clubs) > 0 :
+        sqra.insert_clubs(clubs, db_filename)
     return clubs
