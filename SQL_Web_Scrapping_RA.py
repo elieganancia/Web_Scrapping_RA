@@ -35,6 +35,10 @@ def create_table_ra(db_filename):
                                  id_artist_collab varchar(500),
                                  artist_famous_location varchar(500),
                                  id_artist_most_played_club varchar(500)
+                                 genre varchar(500)
+                                 followers int
+                                 sportify_url varchar(500)
+                                 artist_image_url varchar(500)
                                    )''')
 
     cur.execute('''CREATE TABLE labels (
@@ -83,6 +87,24 @@ def create_table_ra(db_filename):
                                          event_lineup varchar(500),
                                          event_artist varchar(500)
                                                    )''')
+
+    cur.execute('''CREATE TABLE events_meteo(
+                                     id int PRIMARY KEY,
+                                     temperature float,
+                                     humidity float,
+                                     precipitation float,
+                                     snow float,
+                                       )''')
+
+    cur.execute('''CREATE TABLE artists_discography(
+                                     id int PRIMARY KEY,
+                                     name_artist varchar(500),
+                                     album_name varchar(500),
+                                     track_number int,
+                                     track_name varchar(500),
+                                     track_duration int,
+                                     track_preview_url varchar(500)
+                                       )''')
 
     cur.close()
 
