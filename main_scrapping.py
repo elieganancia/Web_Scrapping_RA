@@ -75,7 +75,9 @@ def launch_scrapping(labels_, artists_, events_, clubs_):
               "for each of these artist")
         print("\n")
         data_artists_information = sp.get_artist_information(data_artists)
-        ra_sql.insert_artist(data_artists_information, DB_FILENAME)
+
+        ra_sql.insert_artist(data_artists, DB_FILENAME)
+        ra_sql.insert_artist_infos(data_artists_information, DB_FILENAME)
     else:
         data_artists = None
         data_artists_information = None

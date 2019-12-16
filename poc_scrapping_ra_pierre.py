@@ -233,6 +233,7 @@ def get_artist_information(data_artist_):
     """
     list_url_artist = list(data_artist_['url'])
     list_ids = list(data_artist_['id'])
+    list_artist_dj_names = list(data_artist_['name'])
     print("//////////////////////////////////////////////////////////////////////////////////////////")
     print("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
     print("//////////////////////////////////////////////////////////////////////////////////////////")
@@ -343,7 +344,7 @@ def get_artist_information(data_artist_):
 
 
 
-    data_artist_informations_return = pd.DataFrame({'Name':artist_names, 'Origin':artist_basis_locations,
+    data_artist_informations_return = pd.DataFrame({'DJ_name':list_artist_dj_names,'Name':artist_names, 'Origin':artist_basis_locations,
                                              'Online_account':online_urls,"aka":artist_aka, 'Followers':artist_popularities,
                                              'Description':artist_descriptions, 'Collaborations':artist_collaborations,
                                              'Famous_location':artist_famous_locations,
