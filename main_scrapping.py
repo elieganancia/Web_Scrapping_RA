@@ -18,7 +18,7 @@ import API_meteo_Web_Scrapping_RA as api_meteo
 import pandas as pd
 import argparse
 
-DB_FILENAME = "Test_Elie"
+DB_FILENAME = "Checkpoint_3"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -44,6 +44,7 @@ parser.add_argument('-scrap_artists', action="store_true", default=False)
 parser.add_argument('-scrap_events', action="store_true", default=False)
 parser.add_argument('-scrap_clubs', action="store_true", default=False)
 parser.add_argument('-erase_database', action="store_true", default=False)
+parser.add_argument('-get_external_data', action="store_true", default=False)
 
 pd.set_option('display.max_columns', 500)
 
