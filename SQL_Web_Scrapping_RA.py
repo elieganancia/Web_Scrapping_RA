@@ -95,6 +95,7 @@ def create_table_ra(db_filename):
 
     cur.execute('''CREATE TABLE events_meteo(
                                      id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                     event_id_ra varchar(500),
                                      temperature float,
                                      humidity float,
                                      precipitation float,
@@ -297,27 +298,29 @@ def insert_artist_track(db_filename):
     cur.close()
 
 
-
-
 def update_artist_info(db_filename):
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
     cur.execute('''
-    SELECT artist_name 
-    FROM artists_information''')
+    SELECT artist_name, artist_id_ra
+    FROM artists''')
     result = cur.fetchall()
     for artist in result:
-        spotify_id = spot.get_artist_id(artist)
+        print("searchin info for :", artist)
+        spotify_id = spot.get_artist_id(artist[0])
         artist_info = spot.get_artist_spotify_info(spotify_id)
         if artist_info is not None:
             genre = spot.get_artist_genres(artist_info)
             followers = spot.get_artist_followers(artist_info)
             image = spot.get_artist_thumbnail(artist_info)
             url = spot.get_artist_spotifyurl(artist_info)
-            query = "UPDATE artists_information SET artist_genre = " + "'" + genre + "'" + " artist_spotify_followers = " + "'" + followers + "'" + "artist_sportify_url =" + "'" + url + "'" + " artist_image_url = " + "'" + image + "'" + " WHERE artist_name =" + "'" + artist + "' "
-            cur.execute(query)
-    mydb.commit()
+            print("Launching Queries")
+            cur.execute(
+                '''UPDATE artists_information SET artist_genre = %s, artist_spotify_followers = %s, artist_spotify_url = %s, artist_image_url = %s where id_artist_ra = %s ''',
+                [str(genre), followers, image, url, artist[1]])
+            print("Artist Updated")
+        mydb.commit()
     cur.close()
 
 

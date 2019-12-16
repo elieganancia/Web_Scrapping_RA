@@ -16,7 +16,7 @@ import SQL_Web_Scrapping_RA as ra_sql
 import pandas as pd
 import argparse
 
-DB_FILENAME = "Data_Resident_Advisor"
+DB_FILENAME = "Test_Elie"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -29,7 +29,9 @@ parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scra
                                        "-scrap_artists : specify this option if you want to scrap artists \n"
                                        "-scrap_events : specify this option if you want to scrap events \n"
                                        "-scrap_clubs : specify this option if you want to scrap clubs \n"
-                                       "-erase_database : specify this option if you want to delete your "
+                                       "-erase_database : specify this option if you want to delete your \n"
+                                       "-get_external_data : specify this option if you want to add external "
+                                       "data such as spotify data and meteo data \n"
                                        "resident advisor database \n"
                                        "\n Usage example : (1) main_scrapping.py "
                                        "-scrap_labels -scrap_artists \n (2) main_scrapping.py \n"
@@ -44,7 +46,7 @@ parser.add_argument('-erase_database', action="store_true", default=False)
 pd.set_option('display.max_columns', 500)
 
 
-def launch_scrapping(labels_, artists_, events_, clubs_, erase_):
+def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
     if erase_:
         ra_sql.erase_database(DB_FILENAME)
@@ -87,6 +89,8 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_):
 
         ra_sql.insert_artist(data_artists, DB_FILENAME)
         ra_sql.insert_artist_infos(data_artists_information, DB_FILENAME)
+        if external_api_:
+            print("hello")
     else:
         data_artists = None
         data_artists_information = None
@@ -99,6 +103,8 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_):
               "Scrappy Coco (Americano) :) !!!!!!")
         print("\n")
         data_events = se.get_events(data_countries,DB_FILENAME)
+        if external_api_:
+            print("hello")
     else:
         data_events = None
 
@@ -121,6 +127,7 @@ def main():
     event_arg = False
     artist_arg = False
     erase_arg = False
+    external_info = False
     print("\n")
     print("!!! Hello !!!!")
     print("\n")
@@ -128,7 +135,6 @@ def main():
           "also do many other things but it is not relevant for now :) ")
     print("(Sometimes I speak of me in the third person, please don't judge me !!)")
     print("\n")
-
 
     if (not args.scrap_labels) and (not args.scrap_events) and (not args.scrap_clubs) and (not args.scrap_artists):
         print("You did not specified which information to scrapp (artists/club/event/label).")
@@ -158,7 +164,11 @@ def main():
         if args.erase_database:
             print("You required the deletion of your resident advisor")
             erase_arg = True
-        launch_scrapping(label_arg, artist_arg, event_arg, club_arg, erase_arg)
+        if args.get_external_data:
+            print("Your required some data from external sources/api")
+            print("\n")
+            external_info = True
+        launch_scrapping(label_arg, artist_arg, event_arg, club_arg, erase_arg, external_info)
 
 
 if __name__ == '__main__':

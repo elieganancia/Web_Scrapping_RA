@@ -53,7 +53,10 @@ def get_artist_spotifyurl(artist_infos):
 
 def get_artist_thumbnail(artist_infos):
     if artist_infos is not None:
-        return artist_infos['images'][2]['url']
+        if len(artist_infos['images']) != 0:
+            return (artist_infos['images'][2]['url'])
+        else:
+            return None
     else:
         return None
 
