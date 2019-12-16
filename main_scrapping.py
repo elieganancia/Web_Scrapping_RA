@@ -13,6 +13,8 @@ Otherwise the code will scrap all labels (+15 000 url page) and all events (~600
 import poc_scrapping_ra_pierre as sp
 import poc_web_scrapp as se
 import SQL_Web_Scrapping_RA as ra_sql
+import API_meteo_Web_Scrapping_RA as api_meteo
+
 import pandas as pd
 import argparse
 
@@ -90,7 +92,8 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         ra_sql.insert_artist(data_artists, DB_FILENAME)
         ra_sql.insert_artist_infos(data_artists_information, DB_FILENAME)
         if external_api_:
-            print("hello")
+            ra_sql.update_artist_info(DB_FILENAME)
+            ra_sql.insert_artist_track(DB_FILENAME)
     else:
         data_artists = None
         data_artists_information = None
@@ -104,7 +107,8 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         print("\n")
         data_events = se.get_events(data_countries,DB_FILENAME)
         if external_api_:
-            print("hello")
+            data_meteo = api_meteo.get_meteo_information(DB_FILENAME)
+            ra_sql.insert_meteo(data_meteo, DB_FILENAME)
     else:
         data_events = None
 

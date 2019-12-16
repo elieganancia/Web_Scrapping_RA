@@ -294,7 +294,7 @@ def insert_artist_track(db_filename):
                 cur.execute(sql, val)
         else :
             print("We did'nt find any songs... I'm sorry ! Would you like a HUG ? ")
-    mydb.commit()
+        mydb.commit()
     cur.close()
 
 
@@ -349,4 +349,26 @@ def erase_database(DB_FILENAME):
     query = "DROP DATABASE " + DB_FILENAME
 
     cur.execute(query)
+    cur.close()
+
+
+def insert_meteo(df, db_filename):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
+    for i in range(len(df)):
+        sql = '''INSERT INTO events_meteo (event_id_ra,
+                                    temperature ,
+                                    humidity,
+                                    precipitation,
+                                    snow) \
+                                    VALUES (%s, %s, %s, %s, %s)'''
+
+        val = (str(df["event_id"][i]),
+               float(df["temperature"][i]),
+               float(df['humidity']),
+               float(df['precipitation']),
+               float(df['snow']))
+        cur.execute(sql, val)
+    mydb.commit()
     cur.close()

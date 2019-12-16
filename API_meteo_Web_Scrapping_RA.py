@@ -1,14 +1,10 @@
 import mysql.connector
 import poc_scrapping_ra_pierre as sp
-import SQL_Web_Scrapping_RA as ra_sql
 import json
 import datetime
 import pandas as pd
 
 
-################################################################################################
-#######################           METEO         ################################################
-################################################################################################
 
 def get_meteo_information(DB_FILENAME):
 
@@ -106,29 +102,5 @@ def get_meteo_information(DB_FILENAME):
     return pd.DataFrame({'event_id':meteo_ids,'temperature':meteo_temperatures,'humidity':meteo_humidities,
                          'precipitation':meteo_precipitations,'snow':meteo_snows})
 
-
-def insert_meteo(df, db_filename):
-    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
-                                   auth_plugin='mysql_native_password')
-    cur = mydb.cursor()
-    for i in range(len(df)):
-        sql = '''INSERT INTO events_meteo (event_id_ra,
-                                    temperature ,
-                                    humidity,
-                                    precipitation,
-                                    snow) \
-                                    VALUES (%s, %s, %s, %s, %s)'''
-
-        val = (str(df["event_id"][i]),
-               float(df["temperature"][i]),
-               float(df['humidity']),
-               float(df['precipitation']),
-               float(df['snow']))
-        cur.execute(sql, val)
-    mydb.commit()
-    cur.close()
-
-#data_test_meteo = pd.DataFrame({'event_id':['1'],'temperature':[12],'humidity':[13],'precipitation':[33],'snow':[4]})
-#insert_meteo(data_test_meteo, DB_FILENAME)
 
 
