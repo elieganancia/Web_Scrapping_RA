@@ -9,6 +9,10 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 
 def get_artist_id(artist_name):
+    """Get the Spotify id of an artist if exists from the API
+        :param artist_name : Name of the Artist
+        :return: The Artist spotify id
+        """
     result = sp.search(artist_name)
     if len(result['tracks']['items']) != 0:
         list_of_artists = [result['tracks']['items'][0]['artists'][i]['name'] for i in
@@ -24,6 +28,10 @@ def get_artist_id(artist_name):
 
 
 def get_artist_spotify_info(artist_id):
+    """Get all info on an artist
+            :param artist_id : Spotify ID of the artist
+            :return: Dictionary with all artist spotify info
+            """
     if artist_id != 0:
         return sp.artist(artist_id)
     else:
@@ -31,6 +39,10 @@ def get_artist_spotify_info(artist_id):
 
 
 def get_artist_genres(artist_infos):
+    """Get artist genres
+                :param artist_infos : Dictionary with all artist spotify info
+                :return: List of Artist genre
+                """
     if artist_infos is not None:
         return artist_infos['genres']
     else:
@@ -38,6 +50,10 @@ def get_artist_genres(artist_infos):
 
 
 def get_artist_followers(artist_infos):
+    """Get artist spotify followers
+                :param artist_infos : Dictionary with all artist spotify info
+                :return: Spotify followers
+                """
     if artist_infos is not None:
         return artist_infos['followers']['total']
     else:
@@ -45,6 +61,10 @@ def get_artist_followers(artist_infos):
 
 
 def get_artist_spotifyurl(artist_infos):
+    """Get artist spotify url
+                :param artist_infos : Dictionary with all artist spotify info
+                :return: Spotify URL
+                """
     if artist_infos is not None:
         return artist_infos['external_urls']['spotify']
     else:
@@ -52,6 +72,10 @@ def get_artist_spotifyurl(artist_infos):
 
 
 def get_artist_thumbnail(artist_infos):
+    """Get artist spotify images
+                    :param artist_infos : Dictionary with all artist spotify info
+                    :return: link to Spotify images
+                    """
     if artist_infos is not None:
         if len(artist_infos['images']) != 0:
             return (artist_infos['images'][2]['url'])
@@ -62,6 +86,10 @@ def get_artist_thumbnail(artist_infos):
 
 
 def get_artist_albums(artist_id):
+    """Get artist albums name
+                    :param artist_id : Artist Spotify ID
+                    :return: List of artist albums
+                    """
     if artist_id != 0:
         sp_albums = sp.artist_albums(artist_id, album_type='album')
         album_names = []
@@ -75,6 +103,10 @@ def get_artist_albums(artist_id):
 
 
 def get_artist_song(artist_name):
+    """Get artist spotify albums
+                    :param artist_name : Artist Name
+                    :return: Dataframe with all album information of an artist
+                    """
     artist_songs = pd.DataFrame()
     artist_albums = get_artist_albums(get_artist_id(artist_name))
     if artist_albums is not None:

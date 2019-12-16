@@ -137,7 +137,7 @@ def insert_artist(df, db_filename):
 
 
 def insert_artist_infos(df, db_filename):
-    """Insert artists into the database (Table Artist_Information)
+    """Insert artists information into the database (Table Artist_Information)
         :param df : Name of the Artist Dataframe.
         :param db_filename : Name of the Database
         :return: Insert in the db_filename the datframe info
@@ -175,8 +175,8 @@ def insert_artist_infos(df, db_filename):
 
 
 def insert_label(df, db_filename):
-    """Insert artists into the database (Table Artist_Information)
-            :param df : Name of the Artist Dataframe.
+    """Insert Labels_information  into the database (Table label_information)
+            :param df : Name of the Artist Information Dataframe.
             :param db_filename : Name of the Database
             :return: Insert in the db_filename the datframe info
             """
@@ -208,6 +208,11 @@ def insert_label(df, db_filename):
 
 
 def insert_clubs(df, db_filename):
+    """Insert Clubs Information into the database (Table clubs_information)
+                :param df : Name of the Clubs Dataframe.
+                :param db_filename : Name of the Database
+                :return: Insert in the db_filename the dataframe info
+    """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -236,6 +241,11 @@ def insert_clubs(df, db_filename):
 
 
 def insert_events(df, db_filename):
+    """Insert Events Information into the database (Table events_information)
+                    :param df : Name of the Events Dataframe.
+                    :param db_filename : Name of the Database
+                    :return: Insert in the db_filename the dataframe info
+    """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -264,6 +274,11 @@ def insert_events(df, db_filename):
 
 
 def insert_artist_track(db_filename):
+    """Insert Artists Tracks into the database (Table artists_discography) From the Spotify API
+        (Add album names, track names, duration and preview of song..)
+                        :param db_filename : Name of the Database
+                        :return: Insert in the db_filename the dataframe info
+        """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -299,6 +314,10 @@ def insert_artist_track(db_filename):
 
 
 def update_artist_info(db_filename):
+    """Update artists_information (Artist Genre, Followers, Images & Spotify URL) with the Spotify API
+                            :param db_filename : Name of the Database
+                            :return: Insert in the db_filename the API info
+            """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -325,6 +344,9 @@ def update_artist_info(db_filename):
 
 
 def database_check(DB_FILENAME):
+    """Check if the Database exists
+        :param db_filename : Name of the Database
+    """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -342,6 +364,10 @@ def database_check(DB_FILENAME):
 
 
 def erase_database(DB_FILENAME):
+    """Erase the Database
+            :param db_filename : Name of the Database
+        """
+    mydb = my
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -353,6 +379,10 @@ def erase_database(DB_FILENAME):
 
 
 def insert_meteo(df, db_filename):
+    """Insert meteo into the table events_meteo from a meteo API
+        :param db_filename : Name of the Database
+        :return: Insert in the db_filename the dataframe info
+            """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
