@@ -2,11 +2,8 @@
 Author : Pierre Chemla & Elie Ganancia
 
 This script is main script of our scrapping project.
-It launches the scrapping of all artists/labels/clubs/events.
+Based on CLI argumentsof the user it will launch the scrapping of the Web site residentadvisor.net
 
-If the user wants to scrap information of only a sample of artists/labels/events, Please uncomment the line in the main
-function.
-Otherwise the code will scrap all labels (+15 000 url page) and all events (~6000).
 
 """
 
@@ -18,7 +15,7 @@ import API_meteo_Web_Scrapping_RA as api_meteo
 import pandas as pd
 import argparse
 
-DB_FILENAME = "Checkpoint_3"
+DB_FILENAME = "Data_Resident_Advisor"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
