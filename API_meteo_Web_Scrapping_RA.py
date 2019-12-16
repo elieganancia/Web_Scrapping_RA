@@ -5,7 +5,6 @@ import datetime
 import pandas as pd
 
 
-
 def get_meteo_information(DB_FILENAME):
 
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
@@ -101,6 +100,3 @@ def get_meteo_information(DB_FILENAME):
 
     return pd.DataFrame({'event_id':meteo_ids,'temperature':meteo_temperatures,'humidity':meteo_humidities,
                          'precipitation':meteo_precipitations,'snow':meteo_snows})
-
-
-
