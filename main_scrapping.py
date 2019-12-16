@@ -29,6 +29,8 @@ parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scra
                                        "-scrap_artists : specify this option if you want to scrap artists \n"
                                        "-scrap_events : specify this option if you want to scrap events \n"
                                        "-scrap_clubs : specify this option if you want to scrap clubs \n"
+                                       "-erase_database : specify this option if you want to delete your "
+                                       "resident advisor database \n"
                                        "\n Usage example : (1) main_scrapping.py "
                                        "-scrap_labels -scrap_artists \n (2) main_scrapping.py \n"
                                        "(3) main_scrapping.py -scrap_labels -get_csv /// ")
@@ -37,11 +39,18 @@ parser.add_argument('-scrap_labels', action="store_true", default=False)
 parser.add_argument('-scrap_artists', action="store_true", default=False)
 parser.add_argument('-scrap_events', action="store_true", default=False)
 parser.add_argument('-scrap_clubs', action="store_true", default=False)
+parser.add_argument('-erase_database', action="store_true", default=False)
 
 pd.set_option('display.max_columns', 500)
 
 
-def launch_scrapping(labels_, artists_, events_, clubs_):
+def launch_scrapping(labels_, artists_, events_, clubs_, erase_):
+
+    if erase_:
+        ra_sql.erase_database(DB_FILENAME)
+
+    ra_sql.database_check(DB_FILENAME)
+
     if labels_:
         url_labels = "https://www.residentadvisor.net/labels.aspx?show=all"
         data_labels = sp.get_labels(url_labels)
@@ -111,6 +120,7 @@ def main():
     club_arg = False
     event_arg = False
     artist_arg = False
+    erase_arg = False
     print("\n")
     print("!!! Hello !!!!")
     print("\n")
@@ -127,7 +137,7 @@ def main():
         print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!!")
         print("\n")
-        launch_scrapping(True, True, True, True)
+        launch_scrapping(True, True, True, True, True)
     else:
         if args.scrap_labels:
             print("Your required the scrapping of labels")
@@ -145,7 +155,10 @@ def main():
             print("You required the scrapping of artists")
             print("\n")
             artist_arg = True
-        launch_scrapping(label_arg, artist_arg, event_arg, club_arg)
+        if args.erase_database:
+            print("You required the deletion of your resident advisor")
+            erase_arg = True
+        launch_scrapping(label_arg, artist_arg, event_arg, club_arg, erase_arg)
 
 
 if __name__ == '__main__':

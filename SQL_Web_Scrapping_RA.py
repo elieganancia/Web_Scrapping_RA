@@ -297,7 +297,6 @@ def insert_artist_track(db_filename):
     cur.close()
 
 
-insert_artist_track("Test_Pierre")
 
 
 def update_artist_info(db_filename):
@@ -321,3 +320,30 @@ def update_artist_info(db_filename):
     mydb.commit()
     cur.close()
 
+
+def database_check(DB_FILENAME):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
+
+    query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = " + "'" + DB_FILENAME + "'"
+
+    cur.execute(query)
+    result = cur.fetchall()
+    if len(result) == 0:
+        print("The database does not exist ..... No worries")
+        print("Scrappy Coco will creat one for you")
+        create_table_ra(DB_FILENAME)
+    else:
+        print("The database already exists. Scrappy Coco will update it.")
+
+
+def erase_database(DB_FILENAME):
+    mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
+                                   auth_plugin='mysql_native_password')
+    cur = mydb.cursor()
+
+    query = "DROP DATABASE " + DB_FILENAME
+
+    cur.execute(query)
+    cur.close()
