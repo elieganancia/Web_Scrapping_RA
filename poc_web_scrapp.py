@@ -6,7 +6,6 @@ import time
 import SQL_Web_Scrapping_RA as sqra
 
 
-
 def get_countries():
     """Web-Scrapping Countries from Resident Advisor to use for getting all events"""
     url_club = 'https://www.residentadvisor.net/events?show=all'
@@ -19,6 +18,7 @@ def get_countries():
                     range(len(soup_country.findAll(class_="ulRegions")[0].find_all('a')))]
     countries = list(zip(country_ID, country_name))
     return countries
+
 
 def get_events(countries,db_filename):
     """
