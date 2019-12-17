@@ -1,0 +1,12 @@
+pandas
+argparse
+bs4
+requests
+urllib
+time
+spotipy
+mysql
+unidecode
+json
+datetime
+
