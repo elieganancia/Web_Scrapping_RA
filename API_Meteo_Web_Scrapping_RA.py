@@ -15,12 +15,14 @@ METEO_KEY = "OHdum6zw"
 
 def get_meteo_information(DB_FILENAME):
     """
-    The get_meteo_function get external data using the api meteostat api.
-    This function first select date and location of ech event of our database. It then requests the meteostat
-    api to get more meteo data such as temperature/humidity/snow/precipitations.
-
-    Input : Database name
-    Return: A pandas dataframe
+    The get_meteo_information() function get external data using the api meteostat.
+    This function first select date and location of each event present in our database.
+    It then requests the meteostat, calling a specific url, get more meteo data such as
+    temperature/humidity/snow/precipitations.
+    @param DB_FILENAME: Database name
+    @type DB_FILENAME: string
+    @return: a dataframe containing api external data
+    @rtype: pandas dataframe
     """
 
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
