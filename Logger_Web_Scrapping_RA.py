@@ -2,6 +2,7 @@ import logging
 import sys
 
 
+
 class Scrappy_logger:
 
     def __init__(self):
