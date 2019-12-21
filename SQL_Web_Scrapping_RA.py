@@ -184,7 +184,7 @@ def insert_label(df, db_filename):
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
     for i in range(len(df)):
-        sql = '''INSERT INTO label_information (id_label_ra ,\
+        sql = '''INSERT INTO labels_information (id_label_ra ,\
                                   label_name ,\
                                   label_creation ,\
                                   label_country ,\
