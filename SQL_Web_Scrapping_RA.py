@@ -367,7 +367,7 @@ def erase_database(DB_FILENAME):
     """Erase the Database
             :param db_filename : Name of the Database
         """
-    mydb = my
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
