@@ -7,10 +7,10 @@ Based on CLI argumentsof the user it will launch the scrapping of the Web site r
 
 """
 
-import poc_scrapping_ra_pierre as sp
-import poc_web_scrapp as se
+import Artist_Label_Web_Scrapping_RA as sp
+import Event_Club_Web_Scrapping_RA as se
 import SQL_Web_Scrapping_RA as ra_sql
-import API_meteo_Web_Scrapping_RA as api_meteo
+import API_Meteo_Web_Scrapping_RA as api_meteo
 
 import pandas as pd
 import argparse
@@ -145,7 +145,7 @@ def main():
         print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!!")
         print("\n")
-        launch_scrapping(True, True, True, True, True)
+        launch_scrapping(True, True, True, True, True,True)
     else:
         if args.scrap_labels:
             print("Your required the scrapping of labels")

@@ -5,7 +5,7 @@ This python script contains the get_meteo_information() function used to call th
 """
 
 import mysql.connector
-import poc_scrapping_ra_pierre as sp
+import Artist_Label_Web_Scrapping_RA as sp
 import json
 import datetime
 import pandas as pd

@@ -130,7 +130,7 @@ def insert_artist(df, db_filename):
                                 artist_name)\
                         VALUES (%s,%s,%s)"
 
-        val = (df["id"][i], df["url"][i], df["name"][i])
+        val = (df["id"][i], unidecode(str(df["url"][i])), unidecode(str(df["name"][i])))
         cur.execute(sql, val)
     mydb.commit()
     cur.close()

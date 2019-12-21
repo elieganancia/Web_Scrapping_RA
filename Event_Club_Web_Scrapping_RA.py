@@ -12,15 +12,17 @@ def get_countries():
     with requests.Session() as res:
         country_page = res.get(url_club)
     soup_country = BeautifulSoup(country_page.content, 'html.parser')
-    country_ID = [soup_country.findAll(class_="ulRegions")[0].find_all('a')[i].get('href') for i in
-                  range(len(soup_country.findAll(class_="ulRegions")[0].find_all('a')))]
-    country_name = [soup_country.findAll(class_="ulRegions")[0].find_all('a')[i].get('title') for i in
-                    range(len(soup_country.findAll(class_="ulRegions")[0].find_all('a')))]
+
+    soup_country_ID = soup_country.findAll(class_="ulRegions")[0].find_all('a')
+    country_ID = [soup_country_ID[i].get('href') for i in range(len(soup_country_ID))]
+    soup_country_name = soup_country.findAll(class_="ulRegions")[0].find_all('a')
+    country_name = [soup_country_name[i].get('title') for i in range(len(soup_country_name))]
+
     countries = list(zip(country_ID, country_name))
     return countries
 
 
-def get_events(countries,db_filename):
+def get_events(countries, db_filename):
     """
     This function get information on every event by country (or city) page
     :param countries: list containing id of countries (use function get_countries to scrap countries)
@@ -35,17 +37,14 @@ def get_events(countries,db_filename):
         with requests.Session() as res:
             club_page = res.get(url_events)
         soup_event = BeautifulSoup(club_page.content, 'html.parser')
+        event_date, event_location_id, event_follower, event_lineup, event_artists = [], [], [], [], []
+
         event_id = [soup_event.findAll(class_="event-title")[i].find_all('a')[0].get('href').split('/')[-1] for i in
                     range(len(soup_event.findAll(class_="event-title")))]
         event_name = [soup_event.findAll(class_="event-title")[i].get_text() for i in
                       range(len(soup_event.findAll(class_="event-title")))]
         event_link = ['https://www.residentadvisor.net/events/' + id for id in event_id]
-        event_date = []
-        event_location_id = []
-        event_follower = []
-        event_lineup = []
-        event_artists = []
-        for j,link in enumerate(event_link):
+        for j, link in enumerate(event_link):
             with requests.Session() as res:
                 club_page = res.get(link)
             time.sleep(0.1)
@@ -84,17 +83,17 @@ def get_events(countries,db_filename):
             print(str(j) + ' Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
         events = events.append(event, ignore_index=True)
 
-        if len(events) > 1000 :
+        if len(events) > 1000:
             sqra.insert_events(events, db_filename)
             events = pd.DataFrame()
             print("Commiting Database...........")
-    if len(events) > 0 :
+    if len(events) > 0:
         sqra.insert_events(events, db_filename)
         print("Commiting Database...........")
     return events
 
 
-def get_countries_id() :
+def get_countries_id():
     """Web-Scrapping Countries from Resident Advisor to use for getting all clubs"""
     city_name = []
     city_id = []
@@ -102,20 +101,24 @@ def get_countries_id() :
     with requests.Session() as res:
         country_page = res.get(url_club)
         soup_country = BeautifulSoup(country_page.content, 'html.parser')
-    country_id = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
-    country_name = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
-    countries = list(zip(country_name,country_id))
-    for country in countries :
-        url_club = 'https://www.residentadvisor.net'+country[1]
+    country_id = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in
+                  range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
+    country_name = [soup_country.findAll(class_='links')[0].findAll('a')[i].get('href') for i in
+                    range(len(soup_country.findAll(class_='links')[0].findAll('a')))]
+    countries = list(zip(country_name, country_id))
+    for country in countries:
+        url_club = 'https://www.residentadvisor.net' + country[1]
         with requests.Session() as res:
             country_page = res.get(url_club)
             soup_country = BeautifulSoup(country_page.content, 'html.parser')
-        city_name.append([soup_country.findAll(class_='links')[1].findAll('a')[i].get_text()for i in range(len(soup_country.findAll(class_='links')[1].findAll('a')))])
-        city_id += [soup_country.findAll(class_='links')[1].findAll('a')[i].get('href')for i in range(len(soup_country.findAll(class_='links')[1].findAll('a')))]
+        city_name.append([soup_country.findAll(class_='links')[1].findAll('a')[i].get_text() for i in
+                          range(len(soup_country.findAll(class_='links')[1].findAll('a')))])
+        city_id += [soup_country.findAll(class_='links')[1].findAll('a')[i].get('href') for i in
+                    range(len(soup_country.findAll(class_='links')[1].findAll('a')))]
     return city_id
 
 
-def get_clubs(countries_id,db_filename):
+def get_clubs(countries_id, db_filename):
     """
     This function get information on every clubs by country (or city) page
     :param countries_id: list containing RA id of countries (use function get_countries_id to scrap countries id)
@@ -123,7 +126,7 @@ def get_clubs(countries_id,db_filename):
      followers, capacity, phone , contact )
     """
     clubs = pd.DataFrame()
-    for country_id in countries_id :
+    for country_id in countries_id:
         time.sleep(0.1)
         url_club = 'https://www.residentadvisor.net' + country_id
         with requests.Session() as res:
@@ -165,21 +168,23 @@ def get_clubs(countries_id,db_filename):
                 club_followers.append('None')
             try:
                 club_contact.append(
-                    [page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)[i].get('href') for i
-                     in range(len(page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)))][0])
+                    [page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)[i].get('href')
+                     for i
+                     in range(len(page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)))][
+                        0])
             except:
                 club_contact.append('None')
             print('Scrapping Club Page : ' + club_name[i].title())
         club = pd.DataFrame(
-            {'Club_Country' : country_id, 'Club_link': club_ra_link, 'Club_ID': club_id,
+            {'Club_Country': country_id, 'Club_link': club_ra_link, 'Club_ID': club_id,
              'Club_Name': club_name, 'Club_Location': club_loc,
              'Club_Follower': club_followers, 'Club_Phone': club_phone,
              'Club_Capacity': club_capacity, 'Club_Contact': club_contact})
-        clubs = clubs.append(club,ignore_index=True)
-        if len(clubs) > 1000 :
+        clubs = clubs.append(club, ignore_index=True)
+        if len(clubs) > 1000:
             sqra.insert_clubs(clubs, db_filename)
             clubs = pd.DataFrame()
             print("Commiting Database...........")
-    if len(clubs) > 0 :
+    if len(clubs) > 0:
         sqra.insert_clubs(clubs, db_filename)
     return clubs
