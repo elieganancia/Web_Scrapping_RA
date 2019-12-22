@@ -71,7 +71,6 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these labels \n")
         data_labels_information = sp.get_label_information(data_labels)
-        ra_sql.insert_label(data_labels_information, DB_FILENAME)
     else:
         data_labels = None
         data_labels_information = None

@@ -13,6 +13,7 @@ import requests
 from urllib import parse
 import pandas as pd
 import time
+import SQL_Web_Scrapping_RA as ra_sql
 
 
 ###################
@@ -90,7 +91,7 @@ def get_labels(url_labels_):
 ######---> specific labels
 
 
-def get_label_information(data_labels_):
+def get_label_information(data_labels_, DB_FILENAME):
     """
     This function get information on each labels url page
     :param data_labels_: dataframe cotaining url pages of labels
@@ -106,6 +107,8 @@ def get_label_information(data_labels_):
     print("//////////////////////////////////////////////////////////////////////////////////////////")
     print("\n")
 
+    list_name_label = []
+    list_ids_label = []
     date_creation_labels = []
     location_labels = []
     online_urls = []
@@ -113,9 +116,14 @@ def get_label_information(data_labels_):
     label_description = []
     label_artists = []
 
-    for url_ in list_url_label:
+    counter_ = 0
+
+    for ind_, url_ in enumerate(list_url_label):
         print("Getting information on : {0}".format(url_))
         label_information_content = get_content(url_)
+
+        list_name_label.append(data_labels_['name'][ind_])
+        list_ids_label.append(data_labels_['id'][ind_])
 
         ### first type of information
         first_content = label_information_content.findAll(class_="fl col4-6 small")[0].findAll(class_="clearfix")[1]
@@ -166,6 +174,26 @@ def get_label_information(data_labels_):
         except:
             list_artists_label = None
         label_artists.append(list_artists_label)
+
+        if counter_ > 1000:
+
+            data_label_information_return = pd.DataFrame({'Name': list_name_label, 'Creation': date_creation_labels,
+                                                          'Country': location_labels, 'Online_account': online_urls,
+                                                          'Followers': label_popularities,
+                                                          'Description': label_description,
+                                                          'id': list_ids_label, "ids_artists": label_artists})
+
+            ra_sql.insert_label(data_label_information_return, DB_FILENAME)
+            counter_ = 0
+            list_name_label = []
+            list_ids_label = []
+            date_creation_labels = []
+            location_labels = []
+            online_urls = []
+            label_popularities = []
+            label_description = []
+            label_artists = []
+
 
     data_label_information_return = pd.DataFrame({'Name': list_name_label, 'Creation': date_creation_labels,
                                                   'Country': location_labels, 'Online_account': online_urls,
