@@ -11,7 +11,9 @@ import Artist_Label_Web_Scrapping_RA as sp
 import Event_Club_Web_Scrapping_RA as se
 import SQL_Web_Scrapping_RA as ra_sql
 import API_Meteo_Web_Scrapping_RA as api_meteo
-
+from Logger_Web_Scrapping_RA import Scrappy_logger
+from Logger_Web_Scrapping_RA import Scrappy_info
+import os
 import pandas as pd
 import argparse
 
@@ -45,6 +47,9 @@ parser.add_argument('-get_external_data', action="store_true", default=False)
 
 pd.set_option('display.max_columns', 500)
 
+scrappy_log = Scrappy_logger()
+scrappy_info = Scrappy_info()
+
 
 def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
@@ -56,16 +61,15 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
     if labels_:
         url_labels = "https://www.residentadvisor.net/labels.aspx?show=all"
         data_labels = sp.get_labels(url_labels)
-        print("\n")
-        print("Scrappy Coco just found a listing of all labels in Resident Advisor "
+        scrappy_info.info("\n")
+        scrappy_info.info("Scrappy Coco just found a listing of all labels in Resident Advisor "
               "({0} labels)".format(data_labels.shape[0]))
-        print("Please find below a sample of labels found : \n")
-        print(data_labels.head(10))
-        print("\n")
-        print("Thanks to Scrappy Coco, we have a listing of labels. \n But he can do "
+        scrappy_info.info("Please find below a sample of labels found : \n")
+        scrappy_info.info(data_labels.head(10))
+        scrappy_info.info("\n")
+        scrappy_info.info("Thanks to Scrappy Coco, we have a listing of labels. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
-              "for each of these labels")
-        print("\n")
+              "for each of these labels \n")
         data_labels_information = sp.get_label_information(data_labels)
         ra_sql.insert_label(data_labels_information, DB_FILENAME)
     else:
@@ -75,16 +79,14 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
     if artists_:
         url_artists = "https://www.residentadvisor.net/dj.aspx"
         data_artists = sp.get_artists(url_artists)
-        print("\n")
-        print("Scrappy Coco just found a listing of all artists in Resident Advisor "
+        scrappy_info.info("\n")
+        scrappy_info.info("Scrappy Coco just found a listing of all artists in Resident Advisor "
               "({0} labels)".format(data_artists.shape[0]))
-        print("Please find below a sample of artists found : \n")
-        print(data_artists.head(10))
-        print("\n")
-        print("Thanks to Scrappy Coco, we have a listing of artists. \n But he can do "
+        scrappy_info.info("Please find below a sample of artists found : \n")
+        scrappy_info.info(data_artists.head(10))
+        scrappy_info.info("\n Thanks to Scrappy Coco, we have a listing of artists. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
-              "for each of these artist")
-        print("\n")
+              "for each of these artist \n")
         data_artists_information = sp.get_artist_information(data_artists)
 
         ra_sql.insert_artist(data_artists, DB_FILENAME)
@@ -98,11 +100,10 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
     if events_:
         data_countries = se.get_countries()
-        print("As required, Scrappy Coco will now get some details "
+        scrappy_info.info("As required, Scrappy Coco will now get some details "
               "for each events (parties) on Resident Advisor")
-        print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
-              "Scrappy Coco (Americano) :) !!!!!!")
-        print("\n")
+        scrappy_info.info("!!!! You may have time to buy a coffee, please do not forget to bring one for "
+              "Scrappy Coco (Americano) :) !!!!!! \n")
         data_events = se.get_events(data_countries,DB_FILENAME)
         if external_api_:
             data_meteo = api_meteo.get_meteo_information(DB_FILENAME)
@@ -112,11 +113,10 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
     if clubs_:
         data_countries_id = se.get_countries_id()
-        print("As required, Scrappy Coco will now get some details "
+        scrappy_info.info("As required, Scrappy Coco will now get some details "
               "for each clubs on Resident Advisor")
-        print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
-              "Scrappy Coco (Americano) :) !!!!!!")
-        print("\n")
+        scrappy_info.info("!!!! You may have time to buy a coffee, please do not forget to bring one for "
+              "Scrappy Coco (Americano) :) !!!!!! \n")
         data_clubs = se.get_clubs(data_countries_id,DB_FILENAME)
     else:
         data_clubs = None
@@ -130,45 +130,39 @@ def main():
     artist_arg = False
     erase_arg = False
     external_info = False
-    print("\n")
-    print("!!! Hello !!!!")
-    print("\n")
-    print("My name is Scrappy Coco, I can scrap many things on Resident Advisor. I can "
+
+    scrappy_info.info("\n !!! Hello !!!! \n")
+    scrappy_info.info("My name is Scrappy Coco, I can scrap many things on Resident Advisor. I can "
           "also do many other things but it is not relevant for now :) ")
-    print("(Sometimes I speak of me in the third person, please don't judge me !!)")
-    print("\n")
+    scrappy_info.info("(Sometimes I speak of me in the third person, please don't judge me !!) \n")
+
+    if os.path.exists("RA_Scrappy.log"):
+        os.remove("RA_Scrappy.log")
 
     if (not args.scrap_labels) and (not args.scrap_events) and (not args.scrap_clubs) and (not args.scrap_artists):
-        print("You did not specified which information to scrapp (artists/club/event/label).")
-        print("Scrappy Coco will scrapp everything on Resident Advisor")
-        print("\n")
-        print("!!!! You may have time to buy a coffee, please do not forget to bring one for "
-              "Scrappy Coco (Americano) :) !!!!!!")
-        print("\n")
+        scrappy_info.info("You did not specified which information to scrapp (artists/club/event/label).")
+        scrappy_info.info("Scrappy Coco will scrapp everything on Resident Advisor \n")
+        scrappy_info.info("!!!! You may have time to buy a coffee, please do not forget to bring one for "
+              "Scrappy Coco (Americano) :) !!!!!! \n")
         launch_scrapping(True, True, True, True, True,True)
     else:
         if args.scrap_labels:
-            print("Your required the scrapping of labels")
-            print("\n")
+            scrappy_info.info("Your required the scrapping of labels \n")
             label_arg = True
         if args.scrap_clubs:
-            print("You required the scrapping of clubs")
-            print("\n")
+            scrappy_info.info("You required the scrapping of clubs \n")
             club_arg = True
         if args.scrap_events:
-            print("You required the scrapping of events")
-            print("\n")
+            scrappy_info.info("You required the scrapping of events \n")
             event_arg = True
         if args.scrap_artists:
-            print("You required the scrapping of artists")
-            print("\n")
+            scrappy_info.info("You required the scrapping of artists \n")
             artist_arg = True
         if args.erase_database:
-            print("You required the deletion of your resident advisor")
+            scrappy_info.info("You required the deletion of your resident advisor \n")
             erase_arg = True
         if args.get_external_data:
-            print("Your required some data from external sources/api")
-            print("\n")
+            scrappy_info.info("Your required some data from external sources/api \n")
             external_info = True
         launch_scrapping(label_arg, artist_arg, event_arg, club_arg, erase_arg, external_info)
 
