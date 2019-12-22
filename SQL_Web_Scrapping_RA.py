@@ -197,7 +197,7 @@ def insert_label(df, db_filename):
 
         val = (unidecode(str(df["id"][i])),
                unidecode(str(df["Name"][i])),
-               df["Creation"][i],
+               np.int(df["Creation"][i]),
                unidecode(str(df["Country"][i])),
                unidecode(str(df["Online_account"][i])),
                np.int(df["Followers"][i]),
