@@ -1,5 +1,6 @@
 import mysql.connector
 from unidecode import unidecode
+import numpy as np
 
 import API_Spotify_Web_Scrapping_RA as spot
 
@@ -163,7 +164,7 @@ def insert_artist_infos(df, db_filename):
                unidecode(str(df["Origin"][i])),
                unidecode(str(df["Online_account"][i])),
                unidecode(str(df["aka"][i])),
-               df["Followers"][i],
+               np.int(df["Followers"][i]),
                unidecode(str(df["Description"][i])),
                unidecode(str(df["Collaborations"][i])),
                unidecode(str(df["Famous_location"][i])),
@@ -199,7 +200,7 @@ def insert_label(df, db_filename):
                df["Creation"][i],
                unidecode(str(df["Country"][i])),
                unidecode(str(df["Online_account"][i])),
-               df["Followers"][i],
+               np.int(df["Followers"][i]),
                unidecode(str(df["Description"][i])),
                unidecode(str(df["ids_artists"][i])))
         cur.execute(sql, val)
@@ -231,9 +232,9 @@ def insert_clubs(df, db_filename):
                unidecode(str(df["Club_ID"][i])),
                unidecode(str(df["Club_Name"][i])),
                unidecode(str(df["Club_Location"][i])),
-               df["Club_Follower"][i],
+               np.int(df["Club_Follower"][i]),
                unidecode(str(df["Club_Phone"][i])),
-               df["Club_Capacity"][i],
+               np.int(df["Club_Capacity"][i]),
                unidecode(str(df["Club_Contact"][i])))
         cur.execute(sql, val)
     mydb.commit()
@@ -265,7 +266,7 @@ def insert_events(df, db_filename):
                unidecode(str(df["Event_Name"][i])),
                df["Event_Date"][i],
                unidecode(str(df["Event_Location"][i])),
-               df["Event_Follower"][i],
+               np.int(df["Event_Follower"][i]),
                unidecode(str(df["Event_Lineup"][i])),
                unidecode(str(df["Event_Artists"][i])))
         cur.execute(sql, val)
@@ -302,9 +303,9 @@ def insert_artist_track(db_filename):
 
                 val = (unidecode(str(df['artist_name'][j])),
                        unidecode(str(df['album_name'][j])),
-                       df['track_number'][j],
+                       np.int(df['track_number'][j]),
                        unidecode(str(df['track_name'][j])),
-                       df['track_duration(ms)'][j],
+                       np.int(df['track_duration(ms)'][j]),
                        unidecode(str(df['track_preview_url'][j])))
                 cur.execute(sql, val)
         else :
@@ -337,7 +338,7 @@ def update_artist_info(db_filename):
             print("Launching Queries")
             cur.execute(
                 '''UPDATE artists_information SET artist_genre = %s, artist_spotify_followers = %s, artist_spotify_url = %s, artist_image_url = %s where id_artist_ra = %s ''',
-                [str(genre), followers, image, url, artist[1]])
+                [str(genre), np.int(followers), image, url, artist[1]])
             print("Artist Updated")
         mydb.commit()
     cur.close()
