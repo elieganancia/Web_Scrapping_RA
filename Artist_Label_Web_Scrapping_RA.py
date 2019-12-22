@@ -14,6 +14,8 @@ from urllib import parse
 import pandas as pd
 import time
 import SQL_Web_Scrapping_RA as ra_sql
+from Logger_Web_Scrapping_RA import Scrappy_logger
+from Logger_Web_Scrapping_RA import Scrappy_info
 
 
 ###################
@@ -54,10 +56,12 @@ def get_labels(url_labels_):
     :param url_labels_: url of the page where to get these basic information
     :return: a pandas dataframe which contains these basic information
     """
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("      Scrappy Coco is getting all labels of Resident Advisor")
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("\n")
+
+    scrappy_info = Scrappy_info()
+
+    scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////")
+    scrappy_info.info("      Scrappy Coco is getting is listing all labels of Resident Advisor")
+    scrappy_info.info("////////////////////////////////////////////////////////////////////////////////////////// \n")
 
     BASE_URL = "https://www.residentadvisor.net"
     label_list_content = get_content(url_labels_)
@@ -81,8 +85,7 @@ def get_labels(url_labels_):
 
 
     data_labels_return = pd.DataFrame({'name':label_names, 'url':label_urls, 'id':label_ids})
-    print("{0} labels have been found on Resident Advisor".format(data_labels_return.shape[0]))
-    print("\n")
+    scrappy_info.info("{0} labels have been found on Resident Advisor \n".format(data_labels_return.shape[0]))
     data_labels_return['url'] = BASE_URL + data_labels_return['url']
 
     return data_labels_return
@@ -98,12 +101,16 @@ def get_label_information(data_labels_, DB_FILENAME):
     :return: a dataframe containing specifics information for each artists (name, date, country, online account,
      followers and description)
     """
+
+    scrappy_info = Scrappy_info()
+    scrappy_log = Scrappy_logger()
     list_url_label = list(data_labels_['url'])
 
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("      Scrappy Coco is getting information for all labels ({0} labels)".format(len(list_url_label)))
-    print("////////////////////////////////////////////////////////////////////////////////////////// \n")
+    scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////")
+    scrappy_info.info("      Scrappy Coco is getting information for all labels ({0} labels)".format(len(list_url_label)))
+    scrappy_info.info("////////////////////////////////////////////////////////////////////////////////////////// \n")
 
+    scrappy_log.info("Scrappy Coco is getting information for all labels ({0} labels)".format(len(list_url_label)))
     list_name_label = []
     list_ids_label = []
     date_creation_labels = []
@@ -116,7 +123,7 @@ def get_label_information(data_labels_, DB_FILENAME):
     counter_ = 0
 
     for ind_, url_ in enumerate(list_url_label):
-        print("Getting information on : {0}".format(url_))
+        scrappy_log.info("Getting information on : {0}".format(url_))
         label_information_content = get_content(url_)
 
         list_name_label.append(data_labels_['name'][ind_])
@@ -186,7 +193,7 @@ def get_label_information(data_labels_, DB_FILENAME):
                                                           'Followers': label_popularities,
                                                           'Description': label_description,
                                                           'id': list_ids_label, "ids_artists": label_artists})
-            print("Committing Database ....")
+            scrappy_info.info("Committing Database ....")
             ra_sql.insert_label(data_label_information_return, DB_FILENAME)
 
             list_name_label = []
@@ -203,9 +210,9 @@ def get_label_information(data_labels_, DB_FILENAME):
                                                   'Country': location_labels, 'Online_account': online_urls,
                                                   'Followers': label_popularities, 'Description': label_description,
                                                   'id': list_ids_label,"ids_artists": label_artists})
-    print("Committing Database ....")
+    scrappy_info.info("Committing Database ....")
     ra_sql.insert_label(data_label_information_return, DB_FILENAME)
-    print("\n")
+    scrappy_info.info("\n")
 
     return data_label_information_return
 
@@ -223,10 +230,13 @@ def get_artists(url_artists_):
     :param url_artists_: url of the page where to get these basic information
     :return: a pandas dataframe which contains these basic information
     """
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("Getting all artists of Resident Advisor")
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("\n")
+    scrappy_info = Scrappy_info()
+    scrappy_log = Scrappy_logger()
+    scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////")
+    scrappy_info.info("          Scrappy is getting a listing of all artists of Resident Advisor")
+    scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////\n")
+
+    scrappy_log.info("Scrappy is getting all artists of Resident Advisor")
 
     BASE_URL = "https://www.residentadvisor.net"
     artist_list_content = get_content(url_artists_)
@@ -251,7 +261,8 @@ def get_artists(url_artists_):
 
     data_artist_return = pd.DataFrame({'name':artist_names, 'url':artist_urls, 'id':artist_ids})
     data_artist_return['url'] = BASE_URL + data_artist_return['url']
-    print("{0} artists have been found on Resident Advisor".format(data_artist_return.shape[0]))
+    scrappy_info.info("{0} artists have been found on Resident Advisor".format(data_artist_return.shape[0]))
+    scrappy_log.info("{0} artists have been found on Resident Advisor".format(data_artist_return.shape[0]))
 
     return data_artist_return
 
@@ -265,13 +276,18 @@ def get_artist_information(data_artist_):
     :return: a dataframe containing specifics information for each artists (name, country, online account, alliases,
      followers, description, collaboration, famous location, famous club , url & ids)
     """
+
+    scrappy_info = Scrappy_info()
+    scrappy_log = Scrappy_logger()
+
     list_url_artist = list(data_artist_['url'])
     list_ids = list(data_artist_['id'])
     list_artist_dj_names = list(data_artist_['name'])
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("\n")
+    scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////")
+    scrappy_info.info("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
+    scrappy_info.info("////////////////////////////////////////////////////////////////////////////////////////// \n")
+
+    scrappy_log.info("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
 
     artist_names = []
     artist_basis_locations = []
@@ -286,7 +302,7 @@ def get_artist_information(data_artist_):
 
     for url_ in list_url_artist:
         artist_information_content = get_content(url_)
-        print("Getting information on : {0}".format(url_))
+        scrappy_log.info("Getting information on : {0}".format(url_))
         # First type of Information (names/location/online account)
         first_content = artist_information_content.findAll(class_="col4-6 small fl")[0].findAll(class_="clearfix")[1]
         content_list = first_content.findAll('li')
