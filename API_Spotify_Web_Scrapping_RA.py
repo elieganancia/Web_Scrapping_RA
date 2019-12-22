@@ -88,15 +88,19 @@ def get_artist_thumbnail(artist_infos):
 def get_artist_albums(artist_id):
     """Get artist albums name
                     :param artist_id : Artist Spotify ID
-                    :return: List of artist albums
+                    :return: List of artist albums and single
                     """
     if artist_id != 0:
         sp_albums = sp.artist_albums(artist_id, album_type='album')
+        sp_single = sp.artist_albums(artist_id, album_type='single')
         album_names = []
         album_uris = []
         for i in range(len(sp_albums['items'])):
             album_names.append(sp_albums['items'][i]['name'])
             album_uris.append(sp_albums['items'][i]['uri'].split(":")[-1])
+        for j in range(len(sp_single['items'])):
+            album_names.append(sp_single['items'][j]['name'])
+            album_uris.append(sp_single['items'][j]['uri'].split(":")[-1])
         return list(zip(album_uris, album_names))
     else:
         return None
@@ -113,7 +117,7 @@ def get_artist_song(artist_name):
         for i in range(len(artist_albums)):
             album_info = sp.album_tracks(artist_albums[i][0])
             artist, album_name, track_number, track_name, track_duration, track_preview_url = [], [], [], [], [], []
-            for j in range(len(album_info)):
+            for j in range(len(album_info['items'])):
                 artist.append(artist_name)
                 album_name.append(artist_albums[i][1])
                 try:
