@@ -13,7 +13,6 @@ import SQL_Web_Scrapping_RA as ra_sql
 import API_Meteo_Web_Scrapping_RA as api_meteo
 from Logger_Web_Scrapping_RA import Scrappy_logger
 from Logger_Web_Scrapping_RA import Scrappy_info
-import os
 import pandas as pd
 import argparse
 
@@ -134,8 +133,7 @@ def main():
           "also do many other things but it is not relevant for now :) ")
     scrappy_info.info("(Sometimes I speak of me in the third person, please don't judge me !!) \n")
 
-    if os.path.exists("RA_Scrappy.log"):
-        os.remove("RA_Scrappy.log")
+    scrappy_log.info("SCRAPPY IS READY TO WORK !!! LET'S SCRAPP")
 
     if (not args.scrap_labels) and (not args.scrap_events) and (not args.scrap_clubs) and (not args.scrap_artists):
         scrappy_info.info("You did not specified which information to scrapp (artists/club/event/label).")
