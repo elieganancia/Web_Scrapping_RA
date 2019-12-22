@@ -56,7 +56,7 @@ def create_table_ra(db_filename):
                                          id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                                          id_label_ra varchar(500),
                                          label_name varchar(500),
-                                         label_creation varchar(500),
+                                         label_creation int,
                                          label_country varchar(500),
                                          label_social_media varchar(500),
                                          label_follower int,
@@ -196,7 +196,7 @@ def insert_label(df, db_filename):
 
         val = (unidecode(str(df["id"][i])),
                unidecode(str(df["Name"][i])),
-               unidecode(str(df["Creation"][i])),
+               df["Creation"][i],
                unidecode(str(df["Country"][i])),
                unidecode(str(df["Online_account"][i])),
                df["Followers"][i],

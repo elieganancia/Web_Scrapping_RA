@@ -132,7 +132,10 @@ def get_label_information(data_labels_, DB_FILENAME):
 
         for el in content_list:
             if "established" in el.find("div").get_text().lower():
-                date_creation_labels.append(el.get_text()[-4:])
+                try:
+                    date_creation_labels.append(int(el.get_text()[-4:]))
+                except:
+                    date_creation_labels.append(0)
                 date_ = True
             if "location" in el.find("div").get_text().lower():
                 location_labels.append(el.findAll('a')[0].get_text().strip())
@@ -146,7 +149,7 @@ def get_label_information(data_labels_, DB_FILENAME):
                 online_ = True
 
         if not date_:
-            date_creation_labels.append(None)
+            date_creation_labels.append(0)
         if not location_label_:
             location_labels.append(None)
         if not online_:
