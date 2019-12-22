@@ -27,7 +27,7 @@ def get_countries():
     return countries
 
 
-def get_events(countries, db_filename):
+def get_events(countries, db_filename, scrappy_info_, scrappy_log_):
     """
     This function get information on every event by country (or city) page
     :param countries: list containing id of countries (use function get_countries to scrap countries)
@@ -36,14 +36,12 @@ def get_events(countries, db_filename):
      followers, Line-up (list of dj by their RA id), Artist for the events (by name) )
     """
 
-    scrappy_log = Scrappy_logger()
-    scrappy_info = Scrappy_info()
 
     events = pd.DataFrame()
     event = pd.DataFrame()
-    scrappy_info.info("Scrappy found {} countries. Scrappy will get all events available this "
+    scrappy_info_.info("Scrappy found {} countries. Scrappy will get all events available this "
                       "week for each country. \n".format(len(countries)))
-    scrappy_log.info("Scrappy found {} countries. Scrappy will get all events available this "
+    scrappy_log_.info("Scrappy found {} countries. Scrappy will get all events available this "
                       "week for each country. \n".format(len(countries)))
     for i in range(len(countries)):
         url_events = 'https://www.residentadvisor.net' + countries[i][0]
@@ -94,21 +92,24 @@ def get_events(countries, db_filename):
             event = pd.DataFrame(event_list,
                                  columns=['Country_ID', 'Event_ID', 'Event_Link', 'Event_Name', 'Event_Date',
                                           'Event_Location', 'Event_Follower', 'Event_Lineup', 'Event_Artists'])
-            scrappy_log.info(str(j) + ' Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
+            scrappy_log_.info(str(j) + ' Scrapping Event Page from ' + countries[i][0] + ' : ' + link)
         events = events.append(event, ignore_index=True)
 
         if len(events) > 1000:
             sqra.insert_events(events, db_filename)
             events = pd.DataFrame()
-            scrappy_info.info("Commiting Database...........")
+            scrappy_info_.info("Commiting Database...........")
     if len(events) > 0:
         sqra.insert_events(events, db_filename)
-        scrappy_info.info("Commiting Database...........")
+        scrappy_info_.info("Commiting Database...........")
     return events
 
 
-def get_countries_id():
+def get_countries_id(scrappy_info_, scrappy_log_):
     """Web-Scrapping Countries from Resident Advisor to use for getting all clubs"""
+
+    scrappy_info_.info("Scrappy is getting a listinf of each countries of RA")
+    scrappy_log_.info("Scrappy is getting a listinf of each countries of RA")
     city_name = []
     city_id = []
     url_club = 'https://www.residentadvisor.net/clubs.aspx?ai=44'
@@ -132,18 +133,17 @@ def get_countries_id():
     return city_id
 
 
-def get_clubs(countries_id, db_filename):
+def get_clubs(countries_id, db_filename, scrappy_info_, scrappy_log_):
     """
     This function get information on every clubs by country (or city) page
     :param countries_id: list containing RA id of countries (use function get_countries_id to scrap countries id)
     :return: a dataframe containing specifics information for each club (name, country, id, location,
      followers, capacity, phone , contact )
     """
-    scrappy_log = Scrappy_logger()
-    scrappy_info = Scrappy_info()
+
     clubs = pd.DataFrame()
-    scrappy_log.info("Scrappy is starting the scrapping of club page")
-    scrappy_info.info("Scrappy is starting the scrapping of club page")
+    scrappy_log_.info("Scrappy is starting the scrapping of club page")
+    scrappy_info_.info("Scrappy is starting the scrapping of club page")
     for country_id in countries_id:
         time.sleep(0.1)
         url_club = 'https://www.residentadvisor.net' + country_id
@@ -192,7 +192,7 @@ def get_clubs(countries_id, db_filename):
                         0])
             except:
                 club_contact.append('None')
-            scrappy_log.info('Scrapping Club Page : ' + club_name[i].title())
+            scrappy_log_.info('Scrapping Club Page : ' + club_name[i].title())
         club = pd.DataFrame(
             {'Club_Country': country_id, 'Club_link': club_ra_link, 'Club_ID': club_id,
              'Club_Name': club_name, 'Club_Location': club_loc,
@@ -202,7 +202,7 @@ def get_clubs(countries_id, db_filename):
         if len(clubs) > 1000:
             sqra.insert_clubs(clubs, db_filename)
             clubs = pd.DataFrame()
-            scrappy_info.info("Commiting Database...........")
+            scrappy_info_.info("Commiting Database...........")
     if len(clubs) > 0:
         sqra.insert_clubs(clubs, db_filename)
     return clubs

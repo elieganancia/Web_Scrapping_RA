@@ -60,7 +60,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
     if labels_:
         url_labels = "https://www.residentadvisor.net/labels.aspx?show=all"
-        data_labels = sp.get_labels(url_labels)
+        data_labels = sp.get_labels(url_labels, scrappy_info, scrappy_log)
         scrappy_info.info("\n")
         scrappy_info.info("Scrappy Coco just found a listing of all labels in Resident Advisor "
               "({0} labels)".format(data_labels.shape[0]))
@@ -70,14 +70,14 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         scrappy_info.info("Thanks to Scrappy Coco, we have a listing of labels. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these labels \n")
-        data_labels_information = sp.get_label_information(data_labels, DB_FILENAME)
+        data_labels_information = sp.get_label_information(data_labels, DB_FILENAME, scrappy_info, scrappy_log)
     else:
         data_labels = None
         data_labels_information = None
 
     if artists_:
         url_artists = "https://www.residentadvisor.net/dj.aspx"
-        data_artists = sp.get_artists(url_artists)
+        data_artists = sp.get_artists(url_artists, scrappy_info, scrappy_log)
         scrappy_info.info("\n")
         scrappy_info.info("Scrappy Coco just found a listing of all artists in Resident Advisor "
               "({0} labels)".format(data_artists.shape[0]))
@@ -86,7 +86,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         scrappy_info.info("\n Thanks to Scrappy Coco, we have a listing of artists. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these artist \n")
-        data_artists_information = sp.get_artist_information(data_artists, DB_FILENAME)
+        data_artists_information = sp.get_artist_information(data_artists, DB_FILENAME, scrappy_info, scrappy_log)
 
         ra_sql.insert_artist(data_artists, DB_FILENAME)
         if external_api_:
@@ -102,7 +102,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
               "for each events (parties) on Resident Advisor")
         scrappy_info.info("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!! \n")
-        data_events = se.get_events(data_countries,DB_FILENAME)
+        data_events = se.get_events(data_countries,DB_FILENAME, scrappy_info, scrappy_log)
         if external_api_:
             data_meteo = api_meteo.get_meteo_information(DB_FILENAME)
             ra_sql.insert_meteo(data_meteo, DB_FILENAME)
@@ -110,12 +110,12 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         data_events = None
 
     if clubs_:
-        data_countries_id = se.get_countries_id()
+        data_countries_id = se.get_countries_id(scrappy_info, scrappy_log)
         scrappy_info.info("As required, Scrappy Coco will now get some details "
               "for each clubs on Resident Advisor")
         scrappy_info.info("!!!! You may have time to buy a coffee, please do not forget to bring one for "
               "Scrappy Coco (Americano) :) !!!!!! \n")
-        data_clubs = se.get_clubs(data_countries_id,DB_FILENAME)
+        data_clubs = se.get_clubs(data_countries_id,DB_FILENAME, scrappy_info, scrappy_log)
     else:
         data_clubs = None
 
