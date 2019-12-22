@@ -17,7 +17,7 @@ import os
 import pandas as pd
 import argparse
 
-DB_FILENAME = "Data_Resident_Advisor"
+DB_FILENAME = "Data_Resident_Advisor_Sunday_lt2"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -70,7 +70,7 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         scrappy_info.info("Thanks to Scrappy Coco, we have a listing of labels. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these labels \n")
-        data_labels_information = sp.get_label_information(data_labels)
+        data_labels_information = sp.get_label_information(data_labels, DB_FILENAME)
     else:
         data_labels = None
         data_labels_information = None

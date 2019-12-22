@@ -55,7 +55,7 @@ def get_labels(url_labels_):
     :return: a pandas dataframe which contains these basic information
     """
     print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("Getting all labels of Resident Advisor")
+    print("      Scrappy Coco is getting all labels of Resident Advisor")
     print("//////////////////////////////////////////////////////////////////////////////////////////")
     print("\n")
 
@@ -99,13 +99,10 @@ def get_label_information(data_labels_, DB_FILENAME):
      followers and description)
     """
     list_url_label = list(data_labels_['url'])
-    list_name_label = list(data_labels_['name'])
-    list_ids_label = list(data_labels_['id'])
 
     print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("       The script is getting information for all labels ({0} labels)".format(len(list_url_label)))
-    print("//////////////////////////////////////////////////////////////////////////////////////////")
-    print("\n")
+    print("      Scrappy Coco is getting information for all labels ({0} labels)".format(len(list_url_label)))
+    print("////////////////////////////////////////////////////////////////////////////////////////// \n")
 
     list_name_label = []
     list_ids_label = []
@@ -175,16 +172,16 @@ def get_label_information(data_labels_, DB_FILENAME):
             list_artists_label = None
         label_artists.append(list_artists_label)
 
-        if counter_ > 1000:
+        if len(label_artists) > 100:
 
             data_label_information_return = pd.DataFrame({'Name': list_name_label, 'Creation': date_creation_labels,
                                                           'Country': location_labels, 'Online_account': online_urls,
                                                           'Followers': label_popularities,
                                                           'Description': label_description,
                                                           'id': list_ids_label, "ids_artists": label_artists})
-
+            print("Committing Database ....")
             ra_sql.insert_label(data_label_information_return, DB_FILENAME)
-            counter_ = 0
+
             list_name_label = []
             list_ids_label = []
             date_creation_labels = []
@@ -199,6 +196,8 @@ def get_label_information(data_labels_, DB_FILENAME):
                                                   'Country': location_labels, 'Online_account': online_urls,
                                                   'Followers': label_popularities, 'Description': label_description,
                                                   'id': list_ids_label,"ids_artists": label_artists})
+    print("Committing Database ....")
+    ra_sql.insert_label(data_label_information_return, DB_FILENAME)
     print("\n")
 
     return data_label_information_return
