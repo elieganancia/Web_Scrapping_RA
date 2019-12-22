@@ -17,7 +17,7 @@ import os
 import pandas as pd
 import argparse
 
-DB_FILENAME = "Data_Resident_Advisor_Sunday_lt2"
+DB_FILENAME = "Data_Resident_Advisor_Sunday_lt4"
 
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
@@ -86,10 +86,9 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         scrappy_info.info("\n Thanks to Scrappy Coco, we have a listing of artists. \n But he can do "
               "better !!! \n Scrappy Coco will now get some details "
               "for each of these artist \n")
-        data_artists_information = sp.get_artist_information(data_artists)
+        data_artists_information = sp.get_artist_information(data_artists, DB_FILENAME)
 
         ra_sql.insert_artist(data_artists, DB_FILENAME)
-        ra_sql.insert_artist_infos(data_artists_information, DB_FILENAME)
         if external_api_:
             ra_sql.update_artist_info(DB_FILENAME)
             ra_sql.insert_artist_track(DB_FILENAME)
