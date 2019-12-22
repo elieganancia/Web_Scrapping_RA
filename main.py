@@ -15,9 +15,10 @@ from Logger_Web_Scrapping_RA import Scrappy_logger
 from Logger_Web_Scrapping_RA import Scrappy_info
 import pandas as pd
 import argparse
+import os
 
 DB_FILENAME = "Data_Resident_Advisor_Sunday_lt4"
-
+FILE_LOG = "RA_Scrappy.log"
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
                                        "[-scrap_clubs] [-get_csv]"
@@ -45,6 +46,9 @@ parser.add_argument('-erase_database', action="store_true", default=False)
 parser.add_argument('-get_external_data', action="store_true", default=False)
 
 pd.set_option('display.max_columns', 500)
+
+if os.path.exists(FILE_LOG):
+    os.remove(FILE_LOG)
 
 scrappy_log = Scrappy_logger()
 scrappy_info = Scrappy_info()

@@ -5,7 +5,6 @@ from urllib import parse
 import time
 import SQL_Web_Scrapping_RA as sqra
 import datetime
-from datetime import datetime
 from Logger_Web_Scrapping_RA import Scrappy_logger
 from Logger_Web_Scrapping_RA import Scrappy_info
 
