@@ -174,7 +174,7 @@ def get_clubs(countries_id, db_filename, scrappy_info_, scrappy_log_):
                     club_phone.append(el.get_text().split('/')[-1])
                     phone_ = True
                 if "capacity" in el.get_text().lower():
-                    club_capacity.append(int(el.get_text().split('/')[-1]))
+                    club_capacity.append(int(el.get_text().split('/')[-1].replace(',', '')))
                     capacity_ = True
             if not phone_:
                 club_phone.append("None")
