@@ -36,12 +36,12 @@ def create_table_ra(db_filename):
                                  artist_origin varchar(500),
                                  artist_social_media varchar(500),
                                  artist_nickname varchar(500),
-                                 artist_follower varchar(500),
-                                 artist_description varchar(500),
+                                 artist_follower INT,
+                                 artist_description longtext,
                                  id_artist_collab varchar(500),
-                                 artist_famous_location varchar(500),
-                                 id_artist_most_played_club varchar(500),
-                                 artist_genre varchar(500),
+                                 artist_famous_location longtext,
+                                 id_artist_most_played_club longtext,
+                                 artist_genre longtext,
                                  artist_spotify_followers int,
                                  artist_spotify_url varchar(500),
                                  artist_image_url varchar(500)
@@ -59,9 +59,9 @@ def create_table_ra(db_filename):
                                          label_creation varchar(500),
                                          label_country varchar(500),
                                          label_social_media varchar(500),
-                                         label_follower varchar(500),
-                                         label_description varchar(500),
-                                         label_artist varchar(500)
+                                         label_follower int,
+                                         label_description longtext,
+                                         label_artist longtext
                                            )''')
     cur.execute('''CREATE TABLE countries (
                                          id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -75,9 +75,9 @@ def create_table_ra(db_filename):
                                          club_id_ra varchar(500) ,
                                          club_name varchar(500),
                                          club_location varchar(500),
-                                         club_follower varchar(500),
+                                         club_follower int,
                                          club_phone varchar(500),
-                                         club_capacity varchar(500),
+                                         club_capacity int,
                                          club_contact varchar(500)
                                                    )''')
 
@@ -86,11 +86,11 @@ def create_table_ra(db_filename):
                                          event_id_ra varchar(500),
                                          country_id_ra varchar(500),
                                          event_name varchar(500),
-                                         event_date varchar(500),
+                                         event_date DATETIME,
                                          club_id_ra varchar(500),
-                                         event_follower varchar(500),
-                                         event_lineup varchar(500),
-                                         event_artist varchar(500)
+                                         event_follower int,
+                                         event_lineup longtext,
+                                         event_artist longtext
                                                    )''')
 
     cur.execute('''CREATE TABLE events_meteo(
@@ -107,9 +107,9 @@ def create_table_ra(db_filename):
                                      id_artist_ra varchar(500),
                                      name_artist varchar(500),
                                      album_name varchar(500),
-                                     track_number varchar(500),
+                                     track_number int,
                                      track_name varchar(500),
-                                     track_duration varchar(500),
+                                     track_duration int,
                                      track_preview_url varchar(500)
                                        )''')
     cur.close()
@@ -163,7 +163,7 @@ def insert_artist_infos(df, db_filename):
                unidecode(str(df["Origin"][i])),
                unidecode(str(df["Online_account"][i])),
                unidecode(str(df["aka"][i])),
-               unidecode(str(df["Followers"][i])),
+               df["Followers"][i],
                unidecode(str(df["Description"][i])),
                unidecode(str(df["Collaborations"][i])),
                unidecode(str(df["Famous_location"][i])),
@@ -184,7 +184,7 @@ def insert_label(df, db_filename):
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
     for i in range(len(df)):
-        sql = '''INSERT INTO labels_information (id_label_ra ,\
+        sql = '''INSERT INTO labels_information(id_label_ra ,\
                                   label_name ,\
                                   label_creation ,\
                                   label_country ,\
@@ -199,7 +199,7 @@ def insert_label(df, db_filename):
                unidecode(str(df["Creation"][i])),
                unidecode(str(df["Country"][i])),
                unidecode(str(df["Online_account"][i])),
-               unidecode(str(df["Followers"][i])),
+               df["Followers"][i],
                unidecode(str(df["Description"][i])),
                unidecode(str(df["ids_artists"][i])))
         cur.execute(sql, val)
@@ -231,9 +231,9 @@ def insert_clubs(df, db_filename):
                unidecode(str(df["Club_ID"][i])),
                unidecode(str(df["Club_Name"][i])),
                unidecode(str(df["Club_Location"][i])),
-               unidecode(str(df["Club_Follower"][i])),
+               df["Club_Follower"][i],
                unidecode(str(df["Club_Phone"][i])),
-               unidecode(str(df["Club_Capacity"][i])),
+               df["Club_Capacity"][i],
                unidecode(str(df["Club_Contact"][i])))
         cur.execute(sql, val)
     mydb.commit()
@@ -263,9 +263,9 @@ def insert_events(df, db_filename):
         val = (unidecode(str(df["Event_ID"][i])),
                unidecode(str(df["Country_ID"][i])),
                unidecode(str(df["Event_Name"][i])),
-               unidecode(str(df["Event_Date"][i])),
+               df["Event_Date"][i],
                unidecode(str(df["Event_Location"][i])),
-               unidecode(str(df["Event_Follower"][i])),
+               df["Event_Follower"][i],
                unidecode(str(df["Event_Lineup"][i])),
                unidecode(str(df["Event_Artists"][i])))
         cur.execute(sql, val)
@@ -302,9 +302,9 @@ def insert_artist_track(db_filename):
 
                 val = (unidecode(str(df['artist_name'][j])),
                        unidecode(str(df['album_name'][j])),
-                       unidecode(str(df['track_number'][j])),
+                       df['track_number'][j],
                        unidecode(str(df['track_name'][j])),
-                       unidecode(str(df['track_duration(ms)'][j])),
+                       df['track_duration(ms)'][j],
                        unidecode(str(df['track_preview_url'][j])))
                 cur.execute(sql, val)
         else :

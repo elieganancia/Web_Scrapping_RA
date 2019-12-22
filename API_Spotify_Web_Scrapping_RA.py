@@ -55,7 +55,7 @@ def get_artist_followers(artist_infos):
                 :return: Spotify followers
                 """
     if artist_infos is not None:
-        return artist_infos['followers']['total']
+        return int(artist_infos['followers']['total'])
     else:
         return None
 
@@ -121,17 +121,17 @@ def get_artist_song(artist_name):
                 artist.append(artist_name)
                 album_name.append(artist_albums[i][1])
                 try:
-                    track_number.append(album_info['items'][j]['track_number'])
+                    track_number.append(int(album_info['items'][j]['track_number']))
                 except:
-                    track_number.append(1)
+                    track_number.append(int(1))
                 try:
                     track_name.append(album_info['items'][j]['name'])
                 except:
                     track_name.append("UNNAMED")
                 try:
-                    track_duration.append(album_info['items'][j]["duration_ms"])
+                    track_duration.append(int(album_info['items'][j]["duration_ms"]))
                 except:
-                    track_duration.append(0)
+                    track_duration.append(int(0))
                 try:
                     track_preview_url.append(album_info['items'][j]['preview_url'])
                 except:

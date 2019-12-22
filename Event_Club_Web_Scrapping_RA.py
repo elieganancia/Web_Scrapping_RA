@@ -4,6 +4,8 @@ import pandas as pd
 from urllib import parse
 import time
 import SQL_Web_Scrapping_RA as sqra
+import datetime
+from datetime import datetime
 
 
 def get_countries():
@@ -50,9 +52,10 @@ def get_events(countries, db_filename):
             time.sleep(0.1)
             soup_event_page = BeautifulSoup(club_page.content, 'html.parser')
             try:
-                event_date.append(soup_event_page.findAll(class_="cat-rev")[0].get_text())
+                date =soup_event_page.findAll(class_="cat-rev")[0].get_text()
+                event_date.append(datetime.datetime.strptime(date, '%d %b %Y'))
             except:
-                event_date.append('None')
+                event_date.append(datetime.datetime(1,1,1,1,1))
             try:
                 event_location_id.append(
                     parse.parse_qsl(parse.urlsplit(soup_event_page.findAll(class_="cat-rev")[1].get('href')).query)[0][
@@ -60,9 +63,9 @@ def get_events(countries, db_filename):
             except:
                 event_location_id.append('None')
             try:
-                event_follower.append(soup_event_page.findAll(id="MembersFavouriteCount")[0].get_text())
+                event_follower.append(int(soup_event.findAll(id="MembersFavouriteCount")[0].get_text().split('\n')[1]))
             except:
-                event_follower.append('None')
+                event_follower.append(int(0))
             try:
                 event_lineup.append(soup_event_page.findAll(class_="lineup large")[0].get_text())
             except:
@@ -156,16 +159,16 @@ def get_clubs(countries_id, db_filename):
                     club_phone.append(el.get_text().split('/')[-1])
                     phone_ = True
                 if "capacity" in el.get_text().lower():
-                    club_capacity.append(el.get_text().split('/')[-1])
+                    club_capacity.append(int(el.get_text().split('/')[-1]))
                     capacity_ = True
             if not phone_:
                 club_phone.append("None")
             if not capacity_:
-                club_capacity.append("None")
+                club_capacity.append(int(0))
             try:
-                club_followers.append(page_soup.findAll(class_="favCount")[0].get_text().strip())
+                club_followers.append(int(page_soup.findAll(class_="favCount")[0].get_text().strip()))
             except:
-                club_followers.append('None')
+                club_followers.append(int(0))
             try:
                 club_contact.append(
                     [page_soup.findAll(class_="fl col4-6 small")[0].find_all('a', href=True, text=True)[i].get('href')
