@@ -154,8 +154,12 @@ def get_label_information(data_labels_, DB_FILENAME):
 
         ### second type of information (number of follower)
         second_content = label_information_content.findAll(class_="fav button clearfix")
-        label_popularities.append(
-            second_content[0].findAll(id="MembersFavouriteCount")[0].get_text().strip().replace(",", ""))
+        try:
+            label_popularities.append(
+                int(second_content[0].findAll(id="MembersFavouriteCount")[0].get_text().strip().replace(",", "")))
+        except:
+            label_popularities.append(0)
+
 
         ### third type of information (description)
         third_content = label_information_content.findAll(class_="record-label-blurb")
@@ -319,7 +323,10 @@ def get_artist_information(data_artist_):
         # Second type of information (popularity)
 
         second_content = artist_information_content.findAll(class_="fav button clearfix")[0]
-        artist_popularities.append(second_content.findAll(id="MembersFavouriteCount")[0].get_text().strip().replace(",",""))
+        try:
+            artist_popularities.append(int(second_content.findAll(id="MembersFavouriteCount")[0].get_text().strip().replace(",","")))
+        except:
+            artist_popularities.append(0)
 
         # Third type of information (description)
         try:
