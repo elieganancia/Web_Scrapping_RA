@@ -427,7 +427,7 @@ def get_artist_information(data_artist_, DB_FILENAME, scrappy_info_, scrappy_log
                                              'Description':artist_descriptions, 'Collaborations':artist_collaborations,
                                              'Famous_location':artist_famous_locations,
                                                     'Famous_clubs':artist_famous_clubs,
-                                                    'url':list_url_artist, 'id':list_ids})
+                                                    'url':list_url_artist_return, 'id':list_ids})
     ra_sql.insert_artist_infos(data_artist_informations_return, DB_FILENAME)
     scrappy_info_.info("Committing Database ....")
 
