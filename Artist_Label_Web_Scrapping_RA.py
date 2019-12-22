@@ -120,7 +120,6 @@ def get_label_information(data_labels_, DB_FILENAME):
     label_description = []
     label_artists = []
 
-    counter_ = 0
 
     for ind_, url_ in enumerate(list_url_label):
         scrappy_log.info("Getting information on : {0}".format(url_))
@@ -269,7 +268,7 @@ def get_artists(url_artists_):
 
 # specific artist
 
-def get_artist_information(data_artist_):
+def get_artist_information(data_artist_, DB_FILENAME):
     """
     This function get information on each artist url page
     :param data_artist_: dataframe cotaining url pages of artists
@@ -281,8 +280,7 @@ def get_artist_information(data_artist_):
     scrappy_log = Scrappy_logger()
 
     list_url_artist = list(data_artist_['url'])
-    list_ids = list(data_artist_['id'])
-    list_artist_dj_names = list(data_artist_['name'])
+
     scrappy_info.info("//////////////////////////////////////////////////////////////////////////////////////////")
     scrappy_info.info("The script is getting information for all artists ({0} artists)".format(len(list_url_artist)))
     scrappy_info.info("////////////////////////////////////////////////////////////////////////////////////////// \n")
@@ -292,15 +290,23 @@ def get_artist_information(data_artist_):
     artist_names = []
     artist_basis_locations = []
     online_urls = []
-
+    list_url_artist_return = []
     artist_popularities = []
     artist_descriptions = []
     artist_collaborations = []
     artist_famous_locations = []
     artist_famous_clubs = []
     artist_aka = []
+    list_artist_dj_names = []
+    list_ids = []
 
-    for url_ in list_url_artist:
+    for ind_,url_ in enumerate(list_url_artist):
+
+        list_url_artist_return.append(url_)
+        list_ids.append(data_artist_['id'][ind_])
+        list_artist_dj_names.append(data_artist_['name'][ind_])
+
+
         artist_information_content = get_content(url_)
         scrappy_log.info("Getting information on : {0}".format(url_))
         # First type of Information (names/location/online account)
@@ -395,6 +401,31 @@ def get_artist_information(data_artist_):
             artist_famous_locations.append(None)
             artist_famous_clubs.append(None)
 
+        if len(artist_basis_locations)>100:
+
+            scrappy_info.info("Committing Database ....")
+            data_artist_informations_return = pd.DataFrame(
+                {'DJ_name': list_artist_dj_names, 'Name': artist_names, 'Origin': artist_basis_locations,
+                 'Online_account': online_urls, "aka": artist_aka, 'Followers': artist_popularities,
+                 'Description': artist_descriptions, 'Collaborations': artist_collaborations,
+                 'Famous_location': artist_famous_locations,
+                 'Famous_clubs': artist_famous_clubs,
+                 'url': list_url_artist_return, 'id': list_ids})
+
+            ra_sql.insert_artist_infos(data_artist_informations_return, DB_FILENAME)
+
+            artist_names = []
+            artist_basis_locations = []
+            online_urls = []
+            list_url_artist_return = []
+            artist_popularities = []
+            artist_descriptions = []
+            artist_collaborations = []
+            artist_famous_locations = []
+            artist_famous_clubs = []
+            artist_aka = []
+            list_artist_dj_names = []
+            list_ids = []
 
 
     data_artist_informations_return = pd.DataFrame({'DJ_name':list_artist_dj_names,'Name':artist_names, 'Origin':artist_basis_locations,
@@ -403,6 +434,8 @@ def get_artist_information(data_artist_):
                                              'Famous_location':artist_famous_locations,
                                                     'Famous_clubs':artist_famous_clubs,
                                                     'url':list_url_artist, 'id':list_ids})
+    ra_sql.insert_artist_infos(data_artist_informations_return, DB_FILENAME)
+    scrappy_info.info("Committing Database ....")
 
     return data_artist_informations_return
 
