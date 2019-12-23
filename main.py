@@ -55,6 +55,24 @@ scrappy_info = Scrappy_info()
 
 
 def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
+    """
+    This function launches the scrapping of Scrappy. Based on the argument of the user it will scrapps some parts of
+    the Website resident advisor.
+    @param labels_: if true, scrappy will scrapp labels
+    @type labels_: Boolean
+    @param artists_: if true, scrappy will scrapp artists
+    @type artists_: Boolean
+    @param events_: if true, scrappy will scrap events
+    @type events_: Boolean
+    @param clubs_: if true, scrappy will scrapp clubs
+    @type clubs_: Boolean
+    @param erase_: if true, scrappy will erase the database and create a new one before scrapping
+    @type erase_: Boolean
+    @param external_api_: if true, scrappy will also get external data (Facebok data and Spotify data)
+    @type external_api_: Boolean
+    @return: nothing
+    @rtype: na
+    """
 
     if erase_:
         ra_sql.erase_database(DB_FILENAME)
@@ -124,6 +142,12 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
 
 
 def main():
+    """
+    This function parse the user argument and calls the launch_scrapping() function. It also log/print some welcome
+    message to the user
+    @return: nothing
+    @rtype: na
+    """
     args = parser.parse_args()
     label_arg = False
     club_arg = False

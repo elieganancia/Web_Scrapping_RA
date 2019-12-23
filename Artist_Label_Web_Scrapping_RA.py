@@ -50,6 +50,20 @@ def get_content(url_):
 def get_labels(url_labels_,scrappy_info_, scrappy_log_):
     """
     This function get basic information (name/url/id) of all the labels on Resident advisor
+    The urls will be used later to get more information for each label (get_label_information() function)
+    @param url_labels_:url of the resident page where there is the listing of our artists
+    @type url_labels_: string
+    @param scrappy_info_: first scrappy logger
+    @type scrappy_info_: logging
+    @param scrappy_log_: second scrappy logger
+    @type scrappy_log_:logging
+    @return:
+    @rtype: pandas dataframe
+    """
+
+
+    """
+    This function get basic information (name/url/id) of all the labels on Resident advisor
     The urls will be used to get information for each label
     :param url_labels_: url of the page where to get these basic information
     :return: a pandas dataframe which contains these basic information
@@ -93,12 +107,18 @@ def get_labels(url_labels_,scrappy_info_, scrappy_log_):
 
 def get_label_information(data_labels_, DB_FILENAME,scrappy_info_, scrappy_log_):
     """
-    This function get information on each labels url page
-    :param data_labels_: dataframe cotaining url pages of labels
-    :return: a dataframe containing specifics information for each artists (name, date, country, online account,
-     followers and description)
+    This function scrapps data on each labels url page
+    @param data_labels_: labels basic data such as url/name/ids
+    @type data_labels_:  pandas dataframe
+    @param DB_FILENAME: Database file name of the current scrapping
+    @type DB_FILENAME: string
+    @param scrappy_info_: first logger of scrappy
+    @type scrappy_info_: logging
+    @param scrappy_log_: second logger of the current scrapping
+    @type scrappy_log_: logging
+    @return: a sample of the  labels information
+    @rtype: pandas dataframe
     """
-
 
     list_url_label = list(data_labels_['url'])
 
@@ -219,6 +239,19 @@ def get_label_information(data_labels_, DB_FILENAME,scrappy_info_, scrappy_log_)
 
 
 def get_artists(url_artists_, scrappy_info_, scrappy_log_):
+    """
+    This functions get a listing and basic information of artists presents in the website resident advisor
+    @param url_artists_: url to the page where scrappy gets the listing of all artists of RA
+    @type url_artists_: string
+    @param scrappy_info_: first logger of scrappy
+    @type scrappy_info_: logging
+    @param scrappy_log_: second logger of scrappy
+    @type scrappy_log_: logging
+    @return: a sample of the basic information/listing
+    @rtype: pandas dataframe
+    """
+
+
     """
     This function get basic information (name/url/id) of all the artists on Resident advisor
     The urls will be used to get information for each label
