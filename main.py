@@ -17,7 +17,7 @@ import pandas as pd
 import argparse
 import os
 
-DB_FILENAME = "Data_Resident_Advisor"
+DB_FILENAME = "Data_Resident_Advisor_2"
 FILE_LOG = "RA_Scrappy.log"
 
 parser = argparse.ArgumentParser(usage="main_scrapping.py [-scrap_labels] [-scrap_artists] [-scrap_events] "
