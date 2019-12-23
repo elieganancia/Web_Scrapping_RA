@@ -6,6 +6,15 @@ import API_Spotify_Web_Scrapping_RA as spot
 
 
 def create_table_ra(db_filename):
+    """
+    Create our database structure for the scrapping
+    @param db_filename: database file name
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
+
     """Create a standard DataBase for any Resident_Advisor scrapping data
     :param db_filename : Name of the Database.
     :return: Create the Database in your current path
@@ -117,11 +126,16 @@ def create_table_ra(db_filename):
 
 
 def insert_artist(df, db_filename):
-    """Insert artists into the database (Table Artist)
-        :param df : Name of the Artist Dataframe.
-        :param db_filename : Name of the Database
-        :return: Insert in the db_filename the dataframe info
-        """
+    """
+    Insert artist basic information (name/id_ra/artist_name)
+    @param df: a dataframe containing basic data of artists
+    @type df: pandas dataframe
+    @param db_filename: our current database
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -138,11 +152,16 @@ def insert_artist(df, db_filename):
 
 
 def insert_artist_infos(df, db_filename):
-    """Insert artists information into the database (Table Artist_Information)
-        :param df : Name of the Artist Dataframe.
-        :param db_filename : Name of the Database
-        :return: Insert in the db_filename the datframe info
-        """
+    """
+    Insert artists information into our current database, it is called by get_artist_information() function
+    @param df:
+    @type df: pandas dataframe
+    @param db_filename: current database file
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -176,11 +195,15 @@ def insert_artist_infos(df, db_filename):
 
 
 def insert_label(df, db_filename):
-    """Insert Labels_information  into the database (Table label_information)
-            :param df : Name of the Artist Information Dataframe.
-            :param db_filename : Name of the Database
-            :return: Insert in the db_filename the datframe info
-            """
+    """
+    This function is called by get_label_information() and insert label data into our current database
+    @param df: dataframe containing the label datas
+    @type df: pandas dataframe
+    @param db_filename: current database file
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -209,10 +232,14 @@ def insert_label(df, db_filename):
 
 
 def insert_clubs(df, db_filename):
-    """Insert Clubs Information into the database (Table clubs_information)
-                :param df : Name of the Clubs Dataframe.
-                :param db_filename : Name of the Database
-                :return: Insert in the db_filename the dataframe info
+    """
+    This function insert club data into our current database. It is called by get_clubs() function
+    @param df: dataframe containing clubs datas scrapped
+    @type df: pandas dataframe
+    @param db_filename: current database file
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
     """
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
@@ -242,11 +269,16 @@ def insert_clubs(df, db_filename):
 
 
 def insert_events(df, db_filename):
-    """Insert Events Information into the database (Table events_information)
-                    :param df : Name of the Events Dataframe.
-                    :param db_filename : Name of the Database
-                    :return: Insert in the db_filename the dataframe info
     """
+    This function inserts events information into our database. It is called by get_events().
+    @param df: dataframe containing event information
+    @type df: pandas dataframe
+    @param db_filename: our database file name
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -275,11 +307,15 @@ def insert_events(df, db_filename):
 
 
 def insert_artist_track(db_filename):
-    """Insert Artists Tracks into the database (Table artists_discography) From the Spotify API
-        (Add album names, track names, duration and preview of song..)
-                        :param db_filename : Name of the Database
-                        :return: Insert in the db_filename the dataframe info
-        """
+    """
+    This function insert artist tracks information on our database. It calls our API Spotify function to get external
+    data through the API
+    @param db_filename: database file name
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -315,10 +351,14 @@ def insert_artist_track(db_filename):
 
 
 def update_artist_info(db_filename):
-    """Update artists_information (Artist Genre, Followers, Images & Spotify URL) with the Spotify API
-                            :param db_filename : Name of the Database
-                            :return: Insert in the db_filename the API info
-            """
+    """
+    This function get artist info through the Spotify API. It then inserts data to our database
+    @param db_filename: database filename
+    @type db_filename: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -345,9 +385,14 @@ def update_artist_info(db_filename):
 
 
 def database_check(DB_FILENAME):
-    """Check if the Database exists
-        :param db_filename : Name of the Database
     """
+    This function checck if the database already exists. If not it create one.
+    @param DB_FILENAME: database file name
+    @type DB_FILENAME: string
+    @return: nothing
+    @rtype: na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()
@@ -365,9 +410,14 @@ def database_check(DB_FILENAME):
 
 
 def erase_database(DB_FILENAME):
-    """Erase the Database
-            :param db_filename : Name of the Database
-        """
+    """
+    This function erase the database if the user requires its deletion
+    @param DB_FILENAME: database file name
+    @type DB_FILENAME: string
+    @return: nothing
+    @rtype: na
+    """
+
 
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", passwd="bicep",
                                    auth_plugin='mysql_native_password')
@@ -380,10 +430,17 @@ def erase_database(DB_FILENAME):
 
 
 def insert_meteo(df, db_filename):
-    """Insert meteo into the table events_meteo from a meteo API
-        :param db_filename : Name of the Database
-        :return: Insert in the db_filename the dataframe info
-            """
+
+    """
+    This function inserts meteo external data.
+    @param df: dataframe containing meteo data for each event
+    @type df: pandas dataframe
+    @param db_filename: database filename
+    @type db_filename: string
+    @return: nothing
+    @rtype:na
+    """
+
     mydb = mysql.connector.connect(host="localhost", user="resident_advisor", db=db_filename, passwd="bicep",
                                    auth_plugin='mysql_native_password')
     cur = mydb.cursor()

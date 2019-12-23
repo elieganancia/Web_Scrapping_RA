@@ -61,15 +61,6 @@ def get_labels(url_labels_,scrappy_info_, scrappy_log_):
     @rtype: pandas dataframe
     """
 
-
-    """
-    This function get basic information (name/url/id) of all the labels on Resident advisor
-    The urls will be used to get information for each label
-    :param url_labels_: url of the page where to get these basic information
-    :return: a pandas dataframe which contains these basic information
-    """
-
-
     scrappy_info_.info("//////////////////////////////////////////////////////////////////////////////////////////")
     scrappy_info_.info("      Scrappy Coco is getting is listing all labels of Resident Advisor")
     scrappy_info_.info("////////////////////////////////////////////////////////////////////////////////////////// \n")
@@ -107,7 +98,8 @@ def get_labels(url_labels_,scrappy_info_, scrappy_log_):
 
 def get_label_information(data_labels_, DB_FILENAME,scrappy_info_, scrappy_log_):
     """
-    This function scrapps data on each labels url page
+    This function scrapps data on each labels url page. It calls the insert_label() function to commit the data
+    on the database.
     @param data_labels_: labels basic data such as url/name/ids
     @type data_labels_:  pandas dataframe
     @param DB_FILENAME: Database file name of the current scrapping
@@ -240,7 +232,7 @@ def get_label_information(data_labels_, DB_FILENAME,scrappy_info_, scrappy_log_)
 
 def get_artists(url_artists_, scrappy_info_, scrappy_log_):
     """
-    This functions get a listing and basic information of artists presents in the website resident advisor
+    This functions gets a listing and basic information of artists presents in the website resident advisor
     @param url_artists_: url to the page where scrappy gets the listing of all artists of RA
     @type url_artists_: string
     @param scrappy_info_: first logger of scrappy
@@ -251,13 +243,6 @@ def get_artists(url_artists_, scrappy_info_, scrappy_log_):
     @rtype: pandas dataframe
     """
 
-
-    """
-    This function get basic information (name/url/id) of all the artists on Resident advisor
-    The urls will be used to get information for each label
-    :param url_artists_: url of the page where to get these basic information
-    :return: a pandas dataframe which contains these basic information
-    """
 
     scrappy_info_.info("//////////////////////////////////////////////////////////////////////////////////////////")
     scrappy_info_.info("          Scrappy is getting a listing of all artists of Resident Advisor")
@@ -294,14 +279,21 @@ def get_artists(url_artists_, scrappy_info_, scrappy_log_):
     return data_artist_return
 
 
-# specific artist
 
 def get_artist_information(data_artist_, DB_FILENAME, scrappy_info_, scrappy_log_):
     """
-    This function get information on each artist url page
-    :param data_artist_: dataframe cotaining url pages of artists
-    :return: a dataframe containing specifics information for each artists (name, country, online account, alliases,
-     followers, description, collaboration, famous location, famous club , url & ids)
+    This function get information on each artist url page. It scapps data for each artist. It also call the
+    insert_artist_infos() function that commits on our database the data scrapped
+    @param data_artist_: dataframe send by the get_artists() function
+    @type data_artist_: pandas dataframe
+    @param DB_FILENAME: database filename of the current scrapping
+    @type DB_FILENAME: string
+    @param scrappy_info_: first scrappy logger
+    @type scrappy_info_: logging
+    @param scrappy_log_: second scrappy logger
+    @type scrappy_log_: logging
+    @return: a sample of the data scrapped
+    @rtype: pandas dataframe
     """
 
 
