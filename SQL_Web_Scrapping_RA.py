@@ -100,7 +100,9 @@ def create_table_ra(db_filename):
                                          club_id_ra varchar(500),
                                          event_follower int,
                                          event_lineup longtext,
-                                         event_artist longtext
+                                         event_artist longtext,
+                                         event_fb_interested int,
+                                         event_fb_going int
                                                    )''')
 
     cur.execute('''CREATE TABLE events_meteo(
