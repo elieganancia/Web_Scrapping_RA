@@ -10,6 +10,7 @@ Based on CLI argumentsof the user it will launch the scrapping of the Web site r
 import Artist_Label_Web_Scrapping_RA as sp
 import Event_Club_Web_Scrapping_RA as se
 import SQL_Web_Scrapping_RA as ra_sql
+import update_fb as fb
 import API_Meteo_Web_Scrapping_RA as api_meteo
 from Logger_Web_Scrapping_RA import Scrappy_logger
 from Logger_Web_Scrapping_RA import Scrappy_info
@@ -127,6 +128,9 @@ def launch_scrapping(labels_, artists_, events_, clubs_, erase_, external_api_):
         if external_api_:
             data_meteo = api_meteo.get_meteo_information(DB_FILENAME)
             ra_sql.insert_meteo(data_meteo, DB_FILENAME)
+
+            data_fb = fb.get_facebook_data(DB_FILENAME)
+            fb.update_events_fb(data_fb, "Data_Resident_Advisor")
     else:
         data_events = None
 

@@ -5,13 +5,17 @@ from urllib import parse
 import time
 import SQL_Web_Scrapping_RA as sqra
 import datetime
-from Logger_Web_Scrapping_RA import Scrappy_logger
-from Logger_Web_Scrapping_RA import Scrappy_info
+
 
 
 
 def get_countries():
-    """Web-Scrapping Countries from Resident Advisor to use for getting all events"""
+    """
+    This function get a listing of all country of Resident Advisor with some basic information
+    @return: list of each country and its associated Resident advisor id
+    @rtype: list
+    """
+
     url_club = 'https://www.residentadvisor.net/events?show=all'
     with requests.Session() as res:
         country_page = res.get(url_club)
@@ -28,13 +32,18 @@ def get_countries():
 
 def get_events(countries, db_filename, scrappy_info_, scrappy_log_):
     """
-    This function get information on every event by country (or city) page
-    :param countries: list containing id of countries (use function get_countries to scrap countries)
-    :param countries: list containing id of countries (use function get_countries to scrap countries)
-    :return: a dataframe containing specifics information for each events (name, country, date, location,
-     followers, Line-up (list of dj by their RA id), Artist for the events (by name) )
+    This function receive the listing of resident advisor country and scrapped each event information for each country
+    @param countries: list containing id of countries (use function get_countries to scrap countries)
+    @type countries: list
+    @param db_filename: database filename
+    @type db_filename:  string
+    @param scrappy_info_: first scrappy logger
+    @type scrappy_info_:  logging
+    @param scrappy_log_: second scrappy logger
+    @type scrappy_log_: logging
+    @return: a sample of events scrapped with associated information
+    @rtype: pandas dataframe
     """
-
 
     events = pd.DataFrame()
     event = pd.DataFrame()
@@ -105,7 +114,15 @@ def get_events(countries, db_filename, scrappy_info_, scrappy_log_):
 
 
 def get_countries_id(scrappy_info_, scrappy_log_):
-    """Web-Scrapping Countries from Resident Advisor to use for getting all clubs"""
+    """
+    This function scrapped url of each city for each country of Resident Advisor
+    @param scrappy_info_: first scrappy logger
+    @type scrappy_info_: logging
+    @param scrappy_log_: second scrappy logger
+    @type scrappy_log_: logging
+    @return: a list with all the url for each city
+    @rtype: list
+    """
 
     scrappy_info_.info("Scrappy is getting a listinf of each countries of RA")
     scrappy_log_.info("Scrappy is getting a listinf of each countries of RA")
@@ -133,6 +150,23 @@ def get_countries_id(scrappy_info_, scrappy_log_):
 
 
 def get_clubs(countries_id, db_filename, scrappy_info_, scrappy_log_):
+    """
+    This function get information on every clubs by country (or city) page and call the insert_clubs function to insert
+    the data on the database
+    @param countries_id: url of each city for each countries
+    @type countries_id: string
+    @param db_filename: database file name
+    @type db_filename: string
+    @param scrappy_info_: first scrappy logger
+    @type scrappy_info_: logging
+    @param scrappy_log_: second scrappy logger
+    @type scrappy_log_: logging
+    @return: nothing
+    @rtype: na
+    """
+
+
+
     """
     This function get information on every clubs by country (or city) page
     :param countries_id: list containing RA id of countries (use function get_countries_id to scrap countries id)
